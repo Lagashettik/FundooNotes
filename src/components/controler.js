@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { View } from 'react-native';
+import Login from './login'
+
+
 
 export default class Controler extends Component {
-    render(){
-        return(
-            <Text>Welcome To FundooNotes</Text>
+    render() {
+        return (
+            <View>
+                <Login />
+            </View>
         )
     }
 }
