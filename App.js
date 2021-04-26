@@ -1,14 +1,11 @@
-
+// import 'react-native-gesture-handler';
 
 import React from 'react';
-import { View } from 'react-native';
-import Controler from './src/components/controler'
+import ApplicationStack from './src/navigation/applicationStack'
 
 const App = () => {
   return (
-    <View>
-      <Controler/>
-    </View>
+      <ApplicationStack />
   )
 }
 

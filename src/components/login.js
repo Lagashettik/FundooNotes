@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles'
 import { loginStylesheet } from '../styles/login.styles'
-
+import {globalStyleData} from '../styles/globalStyleData.styles'
 export default class Login extends Component {
     constructor(props) {
         super(props)
@@ -32,8 +32,6 @@ export default class Login extends Component {
                 username: username,
                 warning: true
             })
-            console.log(this.state.username);
-
         }
     }
 
@@ -49,7 +47,6 @@ export default class Login extends Component {
                 password: password
             })
         }
-        console.log(this.state.password)
     }
 
     setstateBlank = () => {
@@ -67,6 +64,22 @@ export default class Login extends Component {
         else {
             alert('Invalid username or pasword')
             this.setstateBlank()
+        }
+    }
+
+    goToSignUp = () => {
+        this.props.navigation.navigate("registration")
+    }
+
+    goToForgetPassword = () => {
+        this.props.navigation.navigate("forgot-password", { setEmailPassword: this.setEmailPassword })
+    }
+
+    setEmailPassword = (email, password) => {
+        if (this.state.USERNAME == email) {
+            this.setState({
+                PASSWORD: password
+            })
         }
     }
 
@@ -94,11 +107,13 @@ export default class Login extends Component {
                         label='Password'
                         value={this.state.password}
                         onChangeText={this.handlePassword}
-                        selectionColor='red'
+                        selectionColor={globalStyleData.selectorcolor}
                         underlineColor='red'
                         secureTextEntry={true}
                     />
-                    <Text style={{ alignSelf: 'flex-end' }}>Forgot Password?</Text>
+                    <TouchableOpacity onPress={this.goToForgetPassword}>
+                        <Text style={{ alignSelf: 'flex-end' }}>Forgot Password?</Text>
+                    </TouchableOpacity>
 
                     <Button
                         mode='contained'
@@ -108,10 +123,11 @@ export default class Login extends Component {
                     > Sign In</Button>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', height: '30%' }}>
-                    <Text >I'm a new user,
-                        <Text style={{ fontWeight: 'bold', color: 'red' }}>Sign Up</Text>
-                    </Text>
-
+                    <Text >I'm a new user,</Text>
+                    <TouchableOpacity onPress={this.goToSignUp}>
+                        <Text
+                            style={{ fontWeight: 'bold', color: 'red' }}>Sign Up</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )

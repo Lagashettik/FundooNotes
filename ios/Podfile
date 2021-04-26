@@ -8,6 +8,10 @@ target 'FundooNotesApp' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'react-native-date-picker', :path => '../node_modules/react-native-date-picker'
+
   target 'FundooNotesAppTests' do
     inherit! :complete
     # Pods for testing

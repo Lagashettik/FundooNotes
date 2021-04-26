@@ -16,6 +16,9 @@ export const globalStylesheet = StyleSheet.create({
     primary_Text: {
         fontSize: 20,
         color: 'gray'
+    },
+    text_Error : {
+        color : 'red'
     }
     
 })
