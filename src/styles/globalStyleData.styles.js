@@ -1,16 +1,14 @@
 
-const globalStyleData = {
-    selectorcolor : 'red',
-    primaryColor : 'red',
-    secondaryColor : 'yellow',
-    
+const globalColorConstant = {
+    SELECTORCOLOR : 'red',
+    PRIMARYCOLOR : 'red',
+    SECONDARYCOLOR : 'yellow'
 }
 
-const fontData = {
+const globalFontConstant = {
     H1 : 40,
     H2 : 20,
-    H3 : 15,
-    
+    H3 : 15    
 }
 
-export {globalStyleData, fontData}
+export {globalColorConstant, globalFontConstant}

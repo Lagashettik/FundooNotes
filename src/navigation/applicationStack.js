@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Login from '../components/login';
 import Registration from '../components/registration';
-import ForgotPassword from '../../../Details/forgotPassword';
-import Register from '../components/register';
+import ForgotPassword from '../components/forgotPassword';
+import Logout from '../components/logout';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +14,8 @@ ApplicationStack = () => {
             <Stack.Navigator initialRouteName="login" headerMode='none'>
                 <Stack.Screen name="registration" component={Registration} />
                 <Stack.Screen name="login" component={Login} />
-                <Stack.Screen name="register" component={Register}/>
+                <Stack.Screen name="forgot-password" component={ForgotPassword}/>
+                <Stack.Screen name="logout" component={Logout}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -3,34 +3,30 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles'
 import { loginStylesheet } from '../styles/login.styles'
-import {globalStyleData} from '../styles/globalStyleData.styles'
+import {globalColorConstant } from '../styles/globalStyleData.styles'
+
 export default class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            USERNAME: 'Admin',
-            PASSWORD: 'Admin123',
-            username: '',
-            password: '',
-            warning: false
+            Email: '',
+            Password: '',
+            Error: false
         }
     }
 
-    handleUsername = (username) => {
+
+    handleEmail = (email) => {
         const regex = new RegExp('^[A-Za-z0-9@.]{0,}$')
-        if (!regex.test(username)) {
-            <Text>Enter Correct username</Text>
+        if (!regex.test(email)) {
             this.setState({
-                username: ''
+                Email: ''
             })
-
-            return (<Text style={{ fontSize: 30 }}>Enter Correct username</Text>)
-
         }
         else {
             this.setState({
-                username: username,
-                warning: true
+                Email: email,
+                Error: true
             })
         }
     }
@@ -39,32 +35,21 @@ export default class Login extends Component {
         const regex = new RegExp('^[A-Za-z0-9@]{0,}$')
         if (!regex.test(password)) {
             this.setState({
-                password: ''
+                Password: ''
             })
         }
         else {
             this.setState({
-                password: password
+                Password: password
             })
         }
     }
 
     setstateBlank = () => {
         this.setState({
-            username: '',
-            password: ''
+            Email: '',
+            Password: ''
         })
-    }
-
-    signIn = () => {
-        if (this.state.username === this.state.USERNAME && this.state.password === this.state.PASSWORD) {
-            alert('Sign Sucessful!')
-            this.setstateBlank()
-        }
-        else {
-            alert('Invalid username or pasword')
-            this.setstateBlank()
-        }
     }
 
     goToSignUp = () => {
@@ -72,15 +57,11 @@ export default class Login extends Component {
     }
 
     goToForgetPassword = () => {
-        this.props.navigation.navigate("forgot-password", { setEmailPassword: this.setEmailPassword })
+        this.props.navigation.navigate("forgot-password")
     }
 
-    setEmailPassword = (email, password) => {
-        if (this.state.USERNAME == email) {
-            this.setState({
-                PASSWORD: password
-            })
-        }
+    signIn = () => {
+        this.props.navigation.navigate('logout')
     }
 
     render() {
@@ -93,8 +74,8 @@ export default class Login extends Component {
                         style={{ marginTop: '10%' }}
                         mode='outlined'
                         label='Email'
-                        value={this.state.username}
-                        onChangeText={this.handleUsername}
+                        value={this.state.Email}
+                        onChangeText={this.handleEmail}
                         selectionColor='red'
                     />
 
@@ -105,9 +86,9 @@ export default class Login extends Component {
                         }}
                         mode='outlined'
                         label='Password'
-                        value={this.state.password}
+                        value={this.state.Password}
                         onChangeText={this.handlePassword}
-                        selectionColor={globalStyleData.selectorcolor}
+                        selectionColor={globalColorConstant.selectorcolor}
                         underlineColor='red'
                         secureTextEntry={true}
                     />
@@ -119,7 +100,7 @@ export default class Login extends Component {
                         mode='contained'
                         style={loginStylesheet.button_SignIn}
                         labelStyle={{ fontSize: 20 }}
-                        onPress={this.signIn}
+                        onPress={this.signIn()}
                     > Sign In</Button>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', height: '30%' }}>

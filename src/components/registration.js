@@ -1,31 +1,31 @@
 import React, { Component } from "react"
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { TextInput, Button, Checkbox } from 'react-native-paper'
 import DatePicker from 'react-native-date-picker'
-
 
 export default class Registration extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            firstname: '',
-            lastname: '',
-            username: '',
+            firstName: '',
+            lastName: '',
+            email: '',
             password: '',
             confirmPassword: '',
             date: new Date(),
-            ErrorFirstname: '',
-            ErrorLastname: '',
-            ErrorUsername: '',
-            ErrorPassword: '',
-            ErrorDate: '',
-            ErrorConfirmPassword: '',
+            errorFirstname: '',
+            errorLastname: '',
+            errorEmail: '',
+            errorPassword: '',
+            errorDate: '',
+            errorConfirmPassword: '',
             secure: true,
             checked: false,
             datePickerVisibility: false
-
         }
     }
+
+ 
 
     handleFirstname = async (value) => {
         const regex = new RegExp('^[A-Z]{1}[a-z]{0,}$')
@@ -50,8 +50,7 @@ export default class Registration extends Component {
                 lastname: '',
                 ErrorLastname: 'Enter correct Lastname'
             })
-        }
-        else {
+        } else {
             this.setState({
                 lastname: value,
                 ErrorLastname: ''
@@ -59,19 +58,18 @@ export default class Registration extends Component {
         }
     }
 
-    handleUsername = (username) => {
+    handleEmail = (email) => {
         const regex = new RegExp('^[A-Za-z0-9@.]{0,}$')
-        if (!regex.test(username)) {
+        if (!regex.test(email)) {
             this.setState({
-                username: '',
-                ErrorUsername: 'Enter correct Username'
+                Email: '',
+                ErrorEmail: 'Enter correct email'
             })
 
-        }
-        else {
+        } else {
             this.setState({
-                username: username,
-                ErrorUsername: ''
+                Email: email,
+                ErrorEmail: ''
             })
 
         }
@@ -84,8 +82,7 @@ export default class Registration extends Component {
                 password: '',
                 ErrorPassword: 'Enter Password in correct format'
             })
-        }
-        else {
+        } else {
             this.setState({
                 password: password,
                 ErrorPassword: ''
@@ -94,7 +91,8 @@ export default class Registration extends Component {
     }
 
     handleConfirmPassword = (value) => {
-        if (value == this.state.password) {
+        console.log(value)
+        if (this.state.password.includes(value)) {
             this.setState({
                 confirmPassword: value,
                 ErrorConfirmPassword: ''
@@ -102,6 +100,7 @@ export default class Registration extends Component {
         }
         else {
             this.setState({
+                confirmPassword : '',
                 ErrorConfirmPassword: 'Password not match'
             })
         }
@@ -114,16 +113,8 @@ export default class Registration extends Component {
         })
     }
 
-    signUp = () => {
-        if (this.state.ErrorDate != '' && this.state.ErrorFirstname != '' && this.state.ErrorLastname != '' && this.state.ErrorPassword != '' && this.state.ErrorUsername != '') {
-            alert('Signed up!')
-        }
-        else {
-            alert('Enter all fields or remaining fields')
-        }
-    }
-
     setDate = (value) => {
+        console.log(value)
         this.setState({
             date: value
         })
@@ -155,19 +146,19 @@ export default class Registration extends Component {
                             style={{ width: '48%', margin: '1%' }}
                             mode='outlined'
                             label='Firstname'
-                            value={this.state.firstname}
+                            value={this.state.firstName}
                             onChangeText={this.handleFirstname} />
 
                         <TextInput
                             style={{ width: '48%', margin: '1%' }}
                             mode='outlined'
                             label='Lastname'
-                            value={this.state.lastname}
+                            value={this.state.lastName}
                             onChangeText={this.handleLastname} />
                     </View>
 
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.ErrorFirstname}
-                        <Text style={{ marginLeft: '1%', color: 'red' }}> {this.state.ErrorLastname}</Text>
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorFirstname}
+                        <Text style={{ marginLeft: '1%', color: 'red' }}> {this.state.errorLastname}</Text>
                     </Text>
 
                     <View style={{ alignContent: 'center', flexDirection: 'column' }}>
@@ -188,14 +179,14 @@ export default class Registration extends Component {
                             </View>
                         }
                     </View>
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.ErrorDate}</Text>
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorDate}</Text>
                     <TextInput
                         style={{ margin: '1%' }}
                         mode='outlined'
                         label='Email'
-                        value={this.state.username}
-                        onChangeText={this.handleUsername} />
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.ErrorUsername}</Text>
+                        value={this.state.email}
+                        onChangeText={this.handleEmail} />
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorEmail}</Text>
                     <TextInput
                         style={{ margin: '1%' }}
                         mode='outlined'
@@ -204,7 +195,7 @@ export default class Registration extends Component {
                         onChangeText={this.handlePassword}
                         secureTextEntry={this.state.secure} />
 
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.ErrorPassword}</Text>
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorPassword}</Text>
                     <TextInput
                         style={{ margin: '1%' }}
                         mode='outlined'
@@ -212,7 +203,7 @@ export default class Registration extends Component {
                         value={this.state.confirmPassword}
                         onChangeText={this.handleConfirmPassword}
                         secureTextEntry={this.state.secure} />
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.ErrorConfirmPassword}</Text>
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorConfirmPassword}</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Checkbox
                             status={this.state.checked ? "checked" : "unchecked"}
@@ -232,7 +223,7 @@ export default class Registration extends Component {
                             backgroundColor: 'red',
                         }}
                         labelStyle={{ fontSize: 20 }}
-                        onPress={this.signUp}>Sign up</Button>
+                        onPress={this.registerUser}>Sign up</Button>
                 </View>
             </ScrollView>
 
