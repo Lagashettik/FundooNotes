@@ -1,7 +1,11 @@
 import React, { Component } from "react"
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { TextInput, Button, Checkbox } from 'react-native-paper'
 import DatePicker from 'react-native-date-picker'
+import firebase from '../../database/firebase'
+import moment from 'moment'
+import { globalStylesheet } from '../styles/global.styles'
+import { registrationStyleSheet } from '../styles/registration.styles'
 
 export default class Registration extends Component {
     constructor(props) {
@@ -13,63 +17,89 @@ export default class Registration extends Component {
             password: '',
             confirmPassword: '',
             date: new Date(),
-            errorFirstname: '',
-            errorLastname: '',
+            errorFirstName: '',
+            errorLastName: '',
             errorEmail: '',
             errorPassword: '',
             errorDate: '',
             errorConfirmPassword: '',
             secure: true,
             checked: false,
-            datePickerVisibility: false
+            datePickerVisibility: false,
+            snackVisible: false
         }
     }
 
- 
+    registerUser = () => {
+        if (this.state.email == '' && this.state.password == '') {
+            this.setState({
+                snackVisible: true
+            })
+        }
+        else {
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(this.state.email, this.state.password)
+                .then(() => {
+                    
+                    console.log('User registration successfully')
+                    this.setState({
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        password: '',
+                        date: new Date(),
+                        snackVisible: false
+                    })
+                    this.props.navigation.navigate('login')
+                })
+                .catch(error => console.log(error.message))
+        }
+    }
 
-    handleFirstname = async (value) => {
+    handleFirstName = async (value) => {
         const regex = new RegExp('^[A-Z]{1}[a-z]{0,}$')
         if (!regex.test(value)) {
             await this.setState({
-                firstname: '',
-                ErrorFirstname: 'Enter correct Firstname'
+                firstName: '',
+                errorFirstName: 'Enter Firstname correctly e.g. Krishna'
             })
         }
         else {
             await this.setState({
-                firstname: value,
-                ErrorFirstname: ''
+                firstName: value,
+                errorFirstName: ''
             })
         }
     }
 
-    handleLastname = async (value) => {
+    handleLastName = async (value) => {
         const regex = new RegExp('^[A-Z]{1}[a-z]{0,}$')
         if (!regex.test(value)) {
             this.setState({
-                lastname: '',
-                ErrorLastname: 'Enter correct Lastname'
+                lastName: '',
+                errorLastName: 'Enter Lastname correctly e.g. Krishna'
             })
         } else {
             this.setState({
-                lastname: value,
-                ErrorLastname: ''
+                lastName: value,
+                errorLastName: ''
             })
         }
     }
 
-    handleEmail = (email) => {
-        const regex = new RegExp('^[A-Za-z0-9@.]{0,}$')
-        if (!regex.test(email)) {
+    handleEmail = (value) => {
+        const regex = new RegExp('^[A-Za-z0-9@.-]{0,}$')
+        if (!regex.test(value)) {
             this.setState({
-                Email: '',
-                ErrorEmail: 'Enter correct email'
+                email: '',
+                errorEmail: 'Enter correct email e.g.Gameplay@gmail.com'
             })
 
         } else {
             this.setState({
-                Email: email,
-                ErrorEmail: ''
+                email: value,
+                errorEmail: ''
             })
 
         }
@@ -80,12 +110,12 @@ export default class Registration extends Component {
         if (!regex.test(password)) {
             this.setState({
                 password: '',
-                ErrorPassword: 'Enter Password in correct format'
+                errorPassword: 'only @ special character allowed'
             })
         } else {
             this.setState({
                 password: password,
-                ErrorPassword: ''
+                errorPassword: ''
             })
         }
     }
@@ -95,13 +125,13 @@ export default class Registration extends Component {
         if (this.state.password.includes(value)) {
             this.setState({
                 confirmPassword: value,
-                ErrorConfirmPassword: ''
+                errorConfirmPassword: ''
             })
         }
         else {
             this.setState({
-                confirmPassword : '',
-                ErrorConfirmPassword: 'Password not match'
+                confirmPassword: '',
+                errorConfirmPassword: 'Password not match re-enter password'
             })
         }
     }
@@ -114,7 +144,8 @@ export default class Registration extends Component {
     }
 
     setDate = (value) => {
-        console.log(value)
+        let mValue = moment(value).format('DD-MM-YYYY')
+        console.log(mValue)
         this.setState({
             date: value
         })
@@ -135,30 +166,27 @@ export default class Registration extends Component {
     render() {
         return (
             <ScrollView>
-                <View style={{
-                    height: '90%',
-                    margin: '10%'
-                }} >
-                    <Text style={{ fontWeight: 'bold', fontSize: 40, marginTop: '10%' }}>Create Account,</Text>
-                    <Text style={{ fontSize: 20, color: 'gray', marginBottom: '10%' }}>Sign up to get started!</Text>
+                <View style={globalStylesheet.parent_conatiner_view} >
+                    <Text style={registrationStyleSheet.header}>Create Account,</Text>
+                    <Text style={{ fontSize: 20 }}>Sign up to get started!</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <TextInput
                             style={{ width: '48%', margin: '1%' }}
                             mode='outlined'
                             label='Firstname'
                             value={this.state.firstName}
-                            onChangeText={this.handleFirstname} />
+                            onChangeText={this.handleFirstName} />
 
                         <TextInput
                             style={{ width: '48%', margin: '1%' }}
                             mode='outlined'
                             label='Lastname'
                             value={this.state.lastName}
-                            onChangeText={this.handleLastname} />
+                            onChangeText={this.handleLastName} />
                     </View>
 
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorFirstname}
-                        <Text style={{ marginLeft: '1%', color: 'red' }}> {this.state.errorLastname}</Text>
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorFirstName}
+                        <Text style={{ marginLeft: '1%', color: 'red' }}> {this.state.errorLastName}</Text>
                     </Text>
 
                     <View style={{ alignContent: 'center', flexDirection: 'column' }}>

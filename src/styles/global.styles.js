@@ -1,24 +1,28 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import {globalColorConstant, globalFontConstant} from '../styles/globalStyleData.styles'
 
 export const globalStylesheet = StyleSheet.create({
-    default_View: {
+    parent_conatiner_view: {
         height: '90%',
-        margin: '5%',
-        marginBottom : '10%'
-        
+        margin: '10%'
     },
     header: {
         fontWeight: 'bold',
-        fontSize: 40,
+        fontSize: globalFontConstant.H1,
         marginTop: '10%'
     },
     primary_Text: {
-        fontSize: 20,
-        color: 'gray'
+        fontSize: globalFontConstant.H2,
+        color: globalColorConstant.SUBTEXTCOLOR
     },
     text_Error : {
+        marginLeft : '1%',
+        fontSize : globalFontConstant.H3,
         color : 'red'
+    },
+    text_input : {
+        marginTop: '10%'
     }
     
 })

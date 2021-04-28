@@ -1,22 +1,42 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Button, Checkbox, TextInput } from 'react-native-paper';
+import { Button, Checkbox, TextInput, Snackbar } from 'react-native-paper';
+import { globalStylesheet } from '../styles/global.styles';
+import firebase from '../../database/firebase';
+import { globalThemeConstant } from '../styles/globalStyleData.styles';
 
 export default class ForgotPassword extends Component {
     constructor() {
         super()
         this.state = {
             email: '',
-            enteredOTP: '',
-            confirmOTP: '123',
-            password: '',
-            confirmPassword: '',
-            securePassword: true,
-            showPassBlock: false,
-            OtpMismatch: '',
-            passwordMismatch: '',
-            passwordWarning: '',
-            emailWarning: ''
+            errorEmail: '',
+            showSnackbar: false,
+            snackbarMessage: ''
+        }
+    }
+
+    resetPassword = () => {
+        const emailRegex = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
+
+        if (!emailRegex.test(this.state.email)) {
+            this.setState({
+                // showSnackbar: true,
+                // snackbarMessage: 'Enter email id correctly'
+                errorEmail: 'Enter valid email id'
+            })
+        } else {
+            firebase
+                .auth()
+                .sendPasswordResetEmail(this.state.email)
+                .then(
+                    this.setState({
+                        errorEmail: '',
+                        showSnackbar: true,
+                        snackbarMessage: 'Reset password instructions send to your email'
+                    })
+                )
+                .catch(error => console.log(error.message))
         }
     }
 
@@ -24,63 +44,14 @@ export default class ForgotPassword extends Component {
         const regex = new RegExp('^[A-Za-z0-9@.-]{0,}$')
         if (!regex.test(value)) {
             this.setState({
-                emailWarning: 'Enter valid email id'
+                errorEmail: 'Enter valid email id'
             })
         }
         else {
             this.setState({
                 email: value,
-                emailWarning: ''
+                errorEmail: ''
             })
-        }
-    }
-
-    handlePassword = (value) => {
-        const regex = new RegExp('^[A-Za-z0-9@]{1,}$')
-        if (!regex.test(value)) {
-            this.setState({
-                password: ''
-            })
-        }
-        else {
-            this.setState({
-                password: value
-            })
-        }
-        console.log(this.state.password)
-    }
-
-    handleConfirmPassword = (value) => {
-        if (this.state.password.includes(value)) {
-            this.setState({
-                confirmPassword: value
-            })
-        }
-    }
-
-    handleOTP = async (value) => {
-        const regex = new RegExp('^[0-9]{0,6}$')
-        if (regex.test(value)) {
-            await this.setState({
-                enteredOTP: value
-            })
-
-            if (this.state.enteredOTP == this.state.confirmOTP) {
-                await this.setState({
-                    showPassBlock: true
-                })
-            }
-            else {
-                await this.setState({
-                    showPassBlock: false
-                })
-            }
-        }
-    }
-
-    setPassword = () => {
-        if (this.state.password === this.state.confirmPassword) {
-            this.props.route.params.setEmailPassword(this.state.email, this.state.password)
         }
     }
 
@@ -88,11 +59,6 @@ export default class ForgotPassword extends Component {
         this.props.navigation.navigate("login")
     }
 
-    setChecked = () => {
-        this.setState({
-            securePassword: !this.state.securePassword
-        })
-    }
 
     render() {
         return (
@@ -100,67 +66,49 @@ export default class ForgotPassword extends Component {
                 height: '90%',
                 margin: '10%'
             }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 40, marginTop: '10%' }}>Forgot Your Password,</Text>
-                <Text style={{ fontSize: 20, color: 'gray', marginBottom: '10%' }}>Enter following details to reset your password!</Text>
+                <Text style={globalStylesheet.header}>Forgot Your Password,</Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>Don't worry!</Text>
+                <Text style={{ fontSize: 15, color: 'gray', marginBottom: '10%' }}>
+                    Enter  your email and click on reset you get password reset instructions on your email
+                </Text>
 
                 <TextInput
-                    style={{ margin: '1%' }}
+                    style={globalStylesheet.text_input}
                     mode='outlined'
                     label='Email'
                     value={this.state.email}
                     onChangeText={this.handleEmail}
+                    theme = {globalThemeConstant.textInputTheme}
                 />
-                <Text >{this.state.emailWarning}</Text>
-                <TextInput
-                    style={{ margin: '1%' }}
-                    mode='outlined'
-                    label='OTP'
-                    value={this.state.enteredOTP}
-                    onChangeText={this.handleOTP}
-                />
+                <Text >{this.state.errorEmail}</Text>
 
-                {
-                    this.state.showPassBlock &&
-                    <View>
-                        <TextInput
-                            style={{ margin: '1%' }}
-                            mode='outlined'
-                            label='Password'
-                            value={this.state.password}
-                            onChangeText={this.handlePassword}
-                            secureTextEntry={this.state.secure} />
 
-                        <TextInput
-                            style={{ margin: '1%' }}
-                            mode='outlined'
-                            label='Confirm Password'
-                            value={this.state.confirmPassword}
-                            onChangeText={this.handleConfirmPassword}
-                            secureTextEntry={this.state.secure} />
+                <Button mode='contained'
+                    style={{
+                        marginTop: '20%',
+                        width: '100%',
+                        height: '6%',
+                        alignSelf: 'flex-end',
+                        justifyContent: 'center',
+                        backgroundColor: 'red'
+                    }}
+                    theme = {{
+                        roundness : 10
+                    }}
+                    labelStyle={{ fontSize: 20 }}
+                    onPress={this.resetPassword}
+                >Reset</Button>
+                <Snackbar
+                    visible={this.state.showSnackbar}
+                    action={{
+                        label: 'Ok',
+                        onPress: this.goToLogin
+                    }}
+                    onDismiss={() => console.log('onDismiss')}
+                    duration={5000}
+                >{this.state.snackbarMessage}</Snackbar>
 
-                        <View style={{flexDirection : 'row', alignItems : 'center'}}>
-                            <Checkbox
-                                status={this.state.securePassword ? "checked" : "unchecked"}
-                                onPress={this.setChecked}
-                                uncheckedColor='red' />
-                            <Text style={{ margin: '1%' }}>Show Password</Text>
-                        </View>
-
-                        <Button mode='contained'
-                            style={{
-                                marginTop: '20%',
-                                width: '30%',
-                                height: '10%',
-                                alignSelf: 'flex-end',
-                                justifyContent: 'center',
-                                backgroundColor: 'red',
-                            }}
-                            labelStyle={{ fontSize: 20 }}
-                            onPress={this.setPassword}
-                        >Set</Button>
-                    </View> 
-    }
-                <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems: 'flex-end' }}>
+                <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems : 'flex-end' }}>
                     <Text>I already have account,</Text>
                     <TouchableOpacity onPress={this.goToLogin}>
                         <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Login</Text>

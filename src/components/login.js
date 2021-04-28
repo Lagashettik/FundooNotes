@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles'
 import { loginStylesheet } from '../styles/login.styles'
-import {globalColorConstant } from '../styles/globalStyleData.styles'
+import { globalColorConstant, globalThemeConstant } from '../styles/globalStyleData.styles'
 import firebase from '../../database/firebase'
 
 export default class Login extends Component {
@@ -12,66 +12,61 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            error: ''
+            errorEmail: ''
         }
     }
 
     userLogin = () => {
-        if (this.state.email === '' && this.state.password === '') {
-            Alert.alert('Enter details to signin!')
-        }
-        else {
+        if (this.state.email == '' && this.state.password == '') {
+            this.setState({
+                errorEmail: 'Enter email and password'
+            })
+        } else {
             firebase
                 .auth()
                 .signInWithEmailAndPassword(this.state.email, this.state.password)
-                .then((res)=> {
+                .then((res) => {
                     console.log(res)
                     console.log('User logged-in successfully!')
                     this.setState({
-                        email : '',
-                        password : ''
+                        email: '',
+                        password: '',
+                        errorEmail: ''
                     })
                     this.props.navigation.navigate('logout')
                 })
-                .catch(error => console.log(error.message))
-          }
+                .catch(error => console.log(error))
+        }
     }
 
-    handleEmail = (email) => {
+    handleEmail = (value) => {
         const regex = new RegExp('^[A-Za-z0-9@.]{0,}$')
-        if (!regex.test(email)) {
+        if (!regex.test(value)) {
             this.setState({
                 email: '',
-                error: 'Enter correct Email'
+                errorEmail: 'Enter correct Email'
             })
         }
         else {
             this.setState({
-                email: email,
-                error: ''
+                email: value,
+                errorEmail: ''
             })
         }
     }
 
-    handlePassword = (password) => {
+    handlePassword = (value) => {
         const regex = new RegExp('^[A-Za-z0-9@]{0,}$')
-        if (!regex.test(password)) {
+        if (!regex.test(value)) {
             this.setState({
                 password: ''
             })
         }
         else {
             this.setState({
-                password: password
+                password: value
             })
         }
-    }
-
-    setstateBlank = () => {
-        this.setState({
-            email: '',
-            password: ''
-        })
     }
 
     goToSignUp = () => {
@@ -85,42 +80,40 @@ export default class Login extends Component {
 
     render() {
         return (
-            <View style={globalStylesheet.default_View}>
-                <View style={{ height: '70%' }}>
+            <View style={globalStylesheet.parent_conatiner_view}>
+                <View style={loginStylesheet.sub_container_view}>
                     <Text style={globalStylesheet.header}>Welcome,</Text>
                     <Text style={globalStylesheet.primary_Text}>Sign in to continue!</Text>
                     <TextInput
-                        style={{ marginTop: '10%' }}
+                        style={loginStylesheet.text_input}
                         mode='outlined'
                         label='Email'
                         value={this.state.email}
                         onChangeText={this.handleEmail}
-                        selectionColor='red'
+                        selectionColor={globalColorConstant.SELECTORCOLOR}
+                        theme={globalThemeConstant.textInputTheme}
                     />
-                    <Text>{this.state.error}</Text>
+                    <Text style={globalStylesheet.text_Error}>{this.state.errorEmail}</Text>
 
                     <TextInput
-                        style={{
-                            marginTop: '10%',
-                            color: 'red',
-                        }}
+                        style={loginStylesheet.text_input}
                         mode='outlined'
                         label='Password'
                         value={this.state.password}
                         onChangeText={this.handlePassword}
                         selectionColor={globalColorConstant.selectorcolor}
-                        underlineColor='red'
                         secureTextEntry={true}
+                        theme={globalThemeConstant.textInputTheme}
                     />
                     <TouchableOpacity onPress={this.goToForgetPassword}>
-                        <Text style={{ alignSelf: 'flex-end' }}>Forgot Password?</Text>
+                        <Text style={loginStylesheet.forgot_password}>Forgot Password?</Text>
                     </TouchableOpacity>
 
                     <Button
                         mode='contained'
                         style={loginStylesheet.button_SignIn}
                         labelStyle={{ fontSize: 20 }}
-                        onPress={this.userLogin()}
+                        onPress={this.userLogin}
                     > Sign In</Button>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', height: '30%' }}>
