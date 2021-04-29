@@ -23,6 +23,13 @@ export const globalStylesheet = StyleSheet.create({
     },
     text_input : {
         marginTop: '10%'
+    },
+    button : {
+        width : '100%',
+        backgroundColor : 'red',
+        height : '5%',
+        marginTop : '10%',
+        justifyContent : 'center'
     }
     
 })

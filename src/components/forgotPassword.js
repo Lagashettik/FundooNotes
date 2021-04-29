@@ -4,6 +4,7 @@ import { Button, Checkbox, TextInput, Snackbar } from 'react-native-paper';
 import { globalStylesheet } from '../styles/global.styles';
 import firebase from '../../database/firebase';
 import { globalThemeConstant } from '../styles/globalStyleData.styles';
+import { forgotPasswordStyleSheet } from '../styles/forgotPassword.styles';
 
 export default class ForgotPassword extends Component {
     constructor() {
@@ -84,14 +85,7 @@ export default class ForgotPassword extends Component {
 
 
                 <Button mode='contained'
-                    style={{
-                        marginTop: '20%',
-                        width: '100%',
-                        height: '6%',
-                        alignSelf: 'flex-end',
-                        justifyContent: 'center',
-                        backgroundColor: 'red'
-                    }}
+                    style={forgotPasswordStyleSheet.button_reset}
                     theme = {{
                         roundness : 10
                     }}

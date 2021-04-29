@@ -7,5 +7,8 @@ export const forgotPasswordStyleSheet = StyleSheet.create({
     },
     header : {
         ...globalStylesheet.header
+    },
+    button_reset : {
+        ...globalStylesheet.button
     }
 })
