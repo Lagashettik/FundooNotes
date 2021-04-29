@@ -59,14 +59,14 @@ export default class ForgotPassword extends Component {
     }
 
     goToLogin = () => {
-        this.props.navigation.navigate("login")
+        this.props.navigation.goBack()
     }
 
     snackbarDismiss = () => {
         this.setState({
             showSnackbar: false
         })
-        this.props.navigation.navigate('login')
+        this.props.navigation.goBack()
     }
 
     render() {

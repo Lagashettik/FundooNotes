@@ -26,7 +26,7 @@ export const globalStylesheet = StyleSheet.create({
     button : {
         width : '100%',
         backgroundColor : 'red',
-        height : '5%',
+        height : '10%',
         marginTop : '10%',
         justifyContent : 'center'
     }

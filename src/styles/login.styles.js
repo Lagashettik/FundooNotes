@@ -18,5 +18,17 @@ export const loginStylesheet = StyleSheet.create({
     },
     sub_container_view: {
         height: '70%'
+    },
+    button_Facebook_SignIn : {
+        ...globalStylesheet.button,
+        marginTop : '10%',
+        backgroundColor : '#3b5998',
+        height : '10%'
+    },
+    button_Google_SignIn : {
+        ...globalStylesheet.button,
+        marginTop : '10%',
+        backgroundColor : '#BB001B',
+        height : '10%'
     }
 })

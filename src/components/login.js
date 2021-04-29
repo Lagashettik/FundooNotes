@@ -45,7 +45,7 @@ export default class Login extends Component {
                 this.props.navigation.navigate('logout')
             } else {
                 this.setState({
-                    error : value
+                    error: value
                 })
             }
         } else {
@@ -98,6 +98,14 @@ export default class Login extends Component {
 
     }
 
+    facebookLogin = () => {
+
+    }
+
+    googleLogin = () => {
+
+    }
+
     render() {
         return (
             <View style={globalStylesheet.parent_conatiner_view}>
@@ -138,13 +146,27 @@ export default class Login extends Component {
                         onPress={this.userLogin}
                     > Sign In</Button>
 
+                    <Button
+                        mode='contained'
+                        icon='facebook'
+                        style={loginStylesheet.button_Facebook_SignIn}
+                        onPress={this.facebookLogin}
+                    > Connect with Facebook</Button>
+
+                    <Button
+                        mode='contained'
+                        icon='google'
+                        style={loginStylesheet.button_Google_SignIn}
+                        onPress={this.googleLogin}
+                    > Connect with Google</Button>
+
                     <Text style={globalStylesheet.text_Error}>{this.state.error}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', height: '30%' }}>
                     <Text >I'm a new user,</Text>
                     <TouchableOpacity onPress={this.goToSignUp}>
                         <Text
-                            style={{ fontWeight: 'bold', color: 'red' }}>Sign Up</Text>
+                            style={{ fontWeight: 'bold', color: 'red' }}> Sign Up</Text>
                     </TouchableOpacity>
                 </View>
             </View>

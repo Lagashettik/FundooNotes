@@ -1,20 +1,14 @@
 import firebase from '../database/firebase'
 
 class UserServices {
-    constructor() {
-        console.log('Object created')
-    }
 
     userLogin = (email, password) => {
-        console.log('login start')
         let errorMessage = '';
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
             .then((res) => {
                 console.log('User logged-in successfully!')
-                errorMessage = ''
-                console.log('No Error ' + errorMessage)
             })
             .catch(error => {
                 console.log(error.message)
@@ -62,7 +56,8 @@ class UserServices {
             .then(
                 errorMessage = ''
             )
-            .catch(error => errorMessage = error.message)
+            .catch(error => console.log(error.message))
+        console.log(errorMessage)
         return errorMessage
     }
 }
