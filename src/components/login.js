@@ -4,7 +4,7 @@ import { TextInput, Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles'
 import { loginStylesheet } from '../styles/login.styles'
 import { globalColorConstant, globalThemeConstant } from '../styles/globalStyleData.styles'
-import firebase from '../../database/firebase'
+import UserServices from '../../services/userServices';
 
 export default class Login extends Component {
     constructor(props) {
@@ -12,30 +12,47 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            errorEmail: ''
+            errorEmail: '',
+            errorPassword: '',
+            error: ''
         }
     }
 
-    userLogin = () => {
+    userLogin = async () => {
+        let regex = new RegExp('^[0-9a-zA-Z]+([._+-][0-9A-Za-z]+)*@[0-9A-Za-z]+[.][a-zA-Z]{2,4}([.][a-zA-Z]{2,4})?$')
         if (this.state.email == '' && this.state.password == '') {
             this.setState({
-                errorEmail: 'Enter email and password'
+                errorEmail: 'Enter email',
+                errorPassword: 'Enter password'
             })
-        } else {
-            firebase
-                .auth()
-                .signInWithEmailAndPassword(this.state.email, this.state.password)
-                .then((res) => {
-                    console.log(res)
-                    console.log('User logged-in successfully!')
-                    this.setState({
-                        email: '',
-                        password: '',
-                        errorEmail: ''
-                    })
-                    this.props.navigation.navigate('logout')
+        } else if (this.state.email != '' && this.state.password == '') {
+            this.setState({
+                errorPassword: 'Enter Password'
+            })
+        } else if (this.state.email == '' && this.state.password != '') {
+            this.setState({
+                errorEmail: 'Enter Email'
+            })
+        } else if (regex.test(this.state.email)) {
+            let userServices = new UserServices()
+            let value = await userServices.userLogin(this.state.email, this.state.password)
+            if (value == '') {
+                this.setState({
+                    email: '',
+                    password: '',
+                    errorEmail: ''
                 })
-                .catch(error => console.log(error))
+                this.props.navigation.navigate('logout')
+            } else {
+                this.setState({
+                    error : value
+                })
+            }
+        } else {
+            this.setState({
+                errorEmail: 'Invalid Email id',
+                ErrorPassword: 'Invalid Password'
+            })
         }
     }
 
@@ -77,6 +94,9 @@ export default class Login extends Component {
         this.props.navigation.navigate("forgot-password")
     }
 
+    handleError = (message) => {
+
+    }
 
     render() {
         return (
@@ -105,6 +125,8 @@ export default class Login extends Component {
                         secureTextEntry={true}
                         theme={globalThemeConstant.textInputTheme}
                     />
+                    <Text style={globalStylesheet.text_Error}>{this.state.errorPassword}</Text>
+
                     <TouchableOpacity onPress={this.goToForgetPassword}>
                         <Text style={loginStylesheet.forgot_password}>Forgot Password?</Text>
                     </TouchableOpacity>
@@ -115,6 +137,8 @@ export default class Login extends Component {
                         labelStyle={{ fontSize: 20 }}
                         onPress={this.userLogin}
                     > Sign In</Button>
+
+                    <Text style={globalStylesheet.text_Error}>{this.state.error}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', height: '30%' }}>
                     <Text >I'm a new user,</Text>

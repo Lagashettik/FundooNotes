@@ -5,7 +5,7 @@ import { globalFontConstant } from './globalStyleData.styles';
 export const loginStylesheet = StyleSheet.create({
     button_SignIn: {
         ...globalStylesheet.button,
-        height : '10%'
+        height: '10%'
     },
     text_input: {
         marginTop: '10%'

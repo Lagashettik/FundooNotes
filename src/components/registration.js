@@ -6,6 +6,8 @@ import firebase from '../../database/firebase'
 import moment from 'moment'
 import { globalStylesheet } from '../styles/global.styles'
 import { registrationStyleSheet } from '../styles/registration.styles'
+import { globalColorConstant, globalThemeConstant } from "../styles/globalStyleData.styles"
+import UserServices from "../../services/userServices"
 
 export default class Registration extends Component {
     constructor(props) {
@@ -16,44 +18,41 @@ export default class Registration extends Component {
             email: '',
             password: '',
             confirmPassword: '',
-            date: new Date(),
+            dateOfBirth: '',
             errorFirstName: '',
             errorLastName: '',
             errorEmail: '',
             errorPassword: '',
-            errorDate: '',
+            errorDateOfBirth: '',
             errorConfirmPassword: '',
             secure: true,
             checked: false,
             datePickerVisibility: false,
-            snackVisible: false
+            snackVisible: false,
+            tempDate: new Date()
         }
     }
 
-    registerUser = () => {
+    userRegister = () => {
         if (this.state.email == '' && this.state.password == '') {
             this.setState({
                 snackVisible: true
             })
         }
         else {
-            firebase
-                .auth()
-                .createUserWithEmailAndPassword(this.state.email, this.state.password)
-                .then(() => {
-                    
-                    console.log('User registration successfully')
-                    this.setState({
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                        password: '',
-                        date: new Date(),
-                        snackVisible: false
-                    })
-                    this.props.navigation.navigate('login')
+            let userServices = new UserServices()
+            let value = userServices.userRegister(this.state.email, this.state.password)
+            if (value == '') {
+                this.setState({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: ''
                 })
-                .catch(error => console.log(error.message))
+            } else {
+                console.log('errorMessage' + value)
+            }
         }
     }
 
@@ -143,12 +142,14 @@ export default class Registration extends Component {
         })
     }
 
-    setDate = (value) => {
+    setDateOfBirth = (value) => {
         let mValue = moment(value).format('DD-MM-YYYY')
         console.log(mValue)
         this.setState({
-            date: value
+            dateOfBirth: mValue,
+            tempDate: value
         })
+        console.log(this.state.dateOfBirth)
     }
 
     openDatePicker = () => {
@@ -168,21 +169,23 @@ export default class Registration extends Component {
             <ScrollView>
                 <View style={globalStylesheet.parent_conatiner_view} >
                     <Text style={registrationStyleSheet.header}>Create Account,</Text>
-                    <Text style={{ fontSize: 20 }}>Sign up to get started!</Text>
-                    <View style={{ flexDirection: 'row' }}>
+                    <Text style={globalStylesheet.primary_Text}>Sign up to get started!</Text>
+                    <View style={registrationStyleSheet.name_container}>
                         <TextInput
-                            style={{ width: '48%', margin: '1%' }}
+                            style={registrationStyleSheet.name_input}
                             mode='outlined'
                             label='Firstname'
                             value={this.state.firstName}
-                            onChangeText={this.handleFirstName} />
+                            onChangeText={this.handleFirstName}
+                            theme={globalThemeConstant.textInputTheme} />
 
                         <TextInput
-                            style={{ width: '48%', margin: '1%' }}
+                            style={registrationStyleSheet.name_input}
                             mode='outlined'
                             label='Lastname'
                             value={this.state.lastName}
-                            onChangeText={this.handleLastName} />
+                            onChangeText={this.handleLastName}
+                            theme={globalThemeConstant.textInputTheme} />
                     </View>
 
                     <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorFirstName}
@@ -192,28 +195,32 @@ export default class Registration extends Component {
                     <View style={{ alignContent: 'center', flexDirection: 'column' }}>
 
                         <TouchableOpacity onPress={this.openDatePicker}>
-                            <Text>Select Date : {this.state.date.toString()}</Text>
+                            <Text style={{ color: 'red' }}>Select Date : {this.state.dateOfBirth}</Text>
                         </TouchableOpacity>
                         {
                             this.state.datePickerVisibility &&
-                            <View style={{ borderColor: 'black', borderWidth: 1 }}>
+                            <View style={{ borderColor: 'red', borderWidth: 1 }}>
                                 <DatePicker
                                     fadeToColor={'white'}
                                     mode='date'
-                                    date={this.state.date}
-                                    onDateChange={this.setDate}
+                                    date={this.state.tempDate}
+                                    onDateChange={this.setDateOfBirth}
                                 />
-                                <Button style={{ alignSelf: 'flex-end' }} onPress={this.closeDatePicker}>Close</Button>
+                                <Button style={registrationStyleSheet.close_button}
+                                    mode="outlined"
+                                    labelStyle={{ color: globalColorConstant.LABELCOLOR }}
+                                    onPress={this.closeDatePicker}>Close</Button>
                             </View>
                         }
                     </View>
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorDate}</Text>
+                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorDateOfBirth}</Text>
                     <TextInput
                         style={{ margin: '1%' }}
                         mode='outlined'
                         label='Email'
                         value={this.state.email}
-                        onChangeText={this.handleEmail} />
+                        onChangeText={this.handleEmail}
+                        theme={globalThemeConstant.textInputTheme} />
                     <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorEmail}</Text>
                     <TextInput
                         style={{ margin: '1%' }}
@@ -221,7 +228,8 @@ export default class Registration extends Component {
                         label='Password'
                         value={this.state.password}
                         onChangeText={this.handlePassword}
-                        secureTextEntry={this.state.secure} />
+                        secureTextEntry={this.state.secure}
+                        theme={globalThemeConstant.textInputTheme} />
 
                     <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorPassword}</Text>
                     <TextInput
@@ -230,7 +238,8 @@ export default class Registration extends Component {
                         label='Confirm Password'
                         value={this.state.confirmPassword}
                         onChangeText={this.handleConfirmPassword}
-                        secureTextEntry={this.state.secure} />
+                        secureTextEntry={this.state.secure}
+                        theme={globalThemeConstant.textInputTheme} />
                     <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorConfirmPassword}</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Checkbox
@@ -242,16 +251,10 @@ export default class Registration extends Component {
                     </View>
 
                     <Button mode='contained'
-                        style={{
-                            marginTop: '20%',
-                            width: '100%',
-                            height: '5%',
-                            alignSelf: 'flex-end',
-                            justifyContent: 'center',
-                            backgroundColor: 'red',
-                        }}
+                        style={registrationStyleSheet.button}
                         labelStyle={{ fontSize: 20 }}
-                        onPress={this.registerUser}>Sign up</Button>
+                        onPress={this.userRegister}
+                        theme={globalThemeConstant.textInputTheme}>Sign up</Button>
                 </View>
             </ScrollView>
 

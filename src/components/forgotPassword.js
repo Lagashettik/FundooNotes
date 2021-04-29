@@ -5,6 +5,7 @@ import { globalStylesheet } from '../styles/global.styles';
 import firebase from '../../database/firebase';
 import { globalThemeConstant } from '../styles/globalStyleData.styles';
 import { forgotPasswordStyleSheet } from '../styles/forgotPassword.styles';
+import UserServices from '../../services/userServices';
 
 export default class ForgotPassword extends Component {
     constructor() {
@@ -20,24 +21,25 @@ export default class ForgotPassword extends Component {
     resetPassword = () => {
         const emailRegex = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
 
-        if (!emailRegex.test(this.state.email)) {
+        if (this.state.email == '') {
             this.setState({
-                // showSnackbar: true,
-                // snackbarMessage: 'Enter email id correctly'
+                errorEmail: 'Enter email'
+            })
+        } else if (emailRegex.test(this.state.email)) {
+            let userServices = new UserServices()
+            let value = userServices.resetPassword(this.state.email)
+            if (value == '')
+                this.setState({
+                    errorEmail: '',
+                    showSnackbar: true,
+                    snackbarMessage: 'Reset password instructions send to your email'
+                })
+            else
+                console.log(value)
+        } else {
+            this.setState({
                 errorEmail: 'Enter valid email id'
             })
-        } else {
-            firebase
-                .auth()
-                .sendPasswordResetEmail(this.state.email)
-                .then(
-                    this.setState({
-                        errorEmail: '',
-                        showSnackbar: true,
-                        snackbarMessage: 'Reset password instructions send to your email'
-                    })
-                )
-                .catch(error => console.log(error.message))
         }
     }
 
@@ -60,6 +62,12 @@ export default class ForgotPassword extends Component {
         this.props.navigation.navigate("login")
     }
 
+    snackbarDismiss = () => {
+        this.setState({
+            showSnackbar: false
+        })
+        this.props.navigation.navigate('login')
+    }
 
     render() {
         return (
@@ -79,15 +87,15 @@ export default class ForgotPassword extends Component {
                     label='Email'
                     value={this.state.email}
                     onChangeText={this.handleEmail}
-                    theme = {globalThemeConstant.textInputTheme}
+                    theme={globalThemeConstant.textInputTheme}
                 />
-                <Text >{this.state.errorEmail}</Text>
+                <Text style={globalStylesheet.text_Error}>{this.state.errorEmail}</Text>
 
 
                 <Button mode='contained'
                     style={forgotPasswordStyleSheet.button_reset}
-                    theme = {{
-                        roundness : 10
+                    theme={{
+                        roundness: 10
                     }}
                     labelStyle={{ fontSize: 20 }}
                     onPress={this.resetPassword}
@@ -98,11 +106,11 @@ export default class ForgotPassword extends Component {
                         label: 'Ok',
                         onPress: this.goToLogin
                     }}
-                    onDismiss={() => console.log('onDismiss')}
+                    onDismiss={this.snackbarDismiss}
                     duration={5000}
                 >{this.state.snackbarMessage}</Snackbar>
 
-                <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems : 'flex-end' }}>
+                <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems: 'flex-end' }}>
                     <Text>I already have account,</Text>
                     <TouchableOpacity onPress={this.goToLogin}>
                         <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Login</Text>

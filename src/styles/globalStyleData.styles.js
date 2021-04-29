@@ -5,7 +5,8 @@ const globalColorConstant = {
     SECONDARYCOLOR: 'gray',
     ERRORCOLOR: 'red',
     MAINTEXTCOLOR: 'black',
-    SUBTEXTCOLOR: 'gray'
+    SUBTEXTCOLOR: 'gray',
+    LABELCOLOR: 'white'
 }
 
 const globalFontConstant = {
