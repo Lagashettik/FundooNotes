@@ -15,9 +15,9 @@ export const registrationStyleSheet = StyleSheet.create({
         width: '48%',
         margin: '1%'
     },
-    button: {
+    button_SignUp: {
         ...globalStylesheet.button,
-        marginTop: '20%',
+        marginTop: '10%',
         height: '7%'
     },
     close_button: {

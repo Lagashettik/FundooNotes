@@ -18,14 +18,15 @@ class UserServices {
         return errorMessage
     }
 
-    userRegister = (email, password) => {
+    userRegister = (user, password) => {
         let errorMessage = '';
         firebase
             .auth()
-            .createUserWithEmailAndPassword(email, password)
+            .createUserWithEmailAndPassword(user.emailId, password)
             .then(() => {
                 console.log('User registration successfully')
                 errorMessage = ''
+                this.saveDataToDatabase(user)
             })
             .catch(error => {
                 console.log(error.message)
@@ -48,17 +49,22 @@ class UserServices {
         return errorMessage
     }
 
-    resetPassword = (email) => {
+    resetPassword = async (email) => {
         let errorMessage = '';
-        firebase
+        await firebase
             .auth()
             .sendPasswordResetEmail(email)
             .then(
                 errorMessage = ''
             )
-            .catch(error => console.log(error.message))
-        console.log(errorMessage)
+            .catch(error => errorMessage = error.message)
+        console.log("errorMessage " + errorMessage)
         return errorMessage
     }
+
+    saveDataToDatabase = (user) =>{
+        firebase.database().ref('/users').push(user)
+    }
+
 }
 export default UserServices;

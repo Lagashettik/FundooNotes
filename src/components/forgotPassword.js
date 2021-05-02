@@ -18,7 +18,7 @@ export default class ForgotPassword extends Component {
         }
     }
 
-    resetPassword = () => {
+    resetPassword = async () => {
         const emailRegex = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
 
         if (this.state.email == '') {
@@ -27,7 +27,7 @@ export default class ForgotPassword extends Component {
             })
         } else if (emailRegex.test(this.state.email)) {
             let userServices = new UserServices()
-            let value = userServices.resetPassword(this.state.email)
+            let value = await userServices.resetPassword(this.state.email)
             if (value == '')
                 this.setState({
                     errorEmail: '',
@@ -35,7 +35,7 @@ export default class ForgotPassword extends Component {
                     snackbarMessage: 'Reset password instructions send to your email'
                 })
             else
-                console.log(value)
+                console.log("error " + value)
         } else {
             this.setState({
                 errorEmail: 'Enter valid email id'
@@ -113,7 +113,7 @@ export default class ForgotPassword extends Component {
                 <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems: 'flex-end' }}>
                     <Text>I already have account,</Text>
                     <TouchableOpacity onPress={this.goToLogin}>
-                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Login</Text>
+                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Sign In</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -9,6 +9,7 @@ export const forgotPasswordStyleSheet = StyleSheet.create({
         ...globalStylesheet.header
     },
     button_reset : {
-        ...globalStylesheet.button
+        ...globalStylesheet.button,
+        height : '8%'
     }
 })

@@ -21,7 +21,7 @@ export const loginStylesheet = StyleSheet.create({
     },
     button_Facebook_SignIn : {
         ...globalStylesheet.button,
-        marginTop : '10%',
+        marginTop : '5%',
         backgroundColor : '#3b5998',
         height : '10%'
     },

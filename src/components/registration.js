@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { TextInput, Button, Checkbox } from 'react-native-paper'
 import DatePicker from 'react-native-date-picker'
-import firebase from '../../database/firebase'
 import moment from 'moment'
 import { globalStylesheet } from '../styles/global.styles'
 import { registrationStyleSheet } from '../styles/registration.styles'
@@ -41,7 +40,13 @@ export default class Registration extends Component {
         }
         else {
             let userServices = new UserServices()
-            let value = userServices.userRegister(this.state.email, this.state.password)
+            const user = {
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                date: this.state.dateOfBirth.toString(),
+                emailId: this.state.email
+            }
+            let value = userServices.userRegister(user, this.state.password)
             if (value == '') {
                 this.setState({
                     firstName: '',
@@ -164,100 +169,108 @@ export default class Registration extends Component {
         })
     }
 
+    goToLogin = () => {
+        this.props.navigation.goBack()
+    }
+
     render() {
         return (
-            <ScrollView>
-                <View style={globalStylesheet.parent_conatiner_view} >
-                    <Text style={registrationStyleSheet.header}>Create Account,</Text>
-                    <Text style={globalStylesheet.primary_Text}>Sign up to get started!</Text>
-                    <View style={registrationStyleSheet.name_container}>
-                        <TextInput
-                            style={registrationStyleSheet.name_input}
-                            mode='outlined'
-                            label='Firstname'
-                            value={this.state.firstName}
-                            onChangeText={this.handleFirstName}
-                            theme={globalThemeConstant.textInputTheme} />
-
-                        <TextInput
-                            style={registrationStyleSheet.name_input}
-                            mode='outlined'
-                            label='Lastname'
-                            value={this.state.lastName}
-                            onChangeText={this.handleLastName}
-                            theme={globalThemeConstant.textInputTheme} />
-                    </View>
-
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorFirstName}
-                        <Text style={{ marginLeft: '1%', color: 'red' }}> {this.state.errorLastName}</Text>
-                    </Text>
-
-                    <View style={{ alignContent: 'center', flexDirection: 'column' }}>
-
-                        <TouchableOpacity onPress={this.openDatePicker}>
-                            <Text style={{ color: 'red' }}>Select Date : {this.state.dateOfBirth}</Text>
-                        </TouchableOpacity>
-                        {
-                            this.state.datePickerVisibility &&
-                            <View style={{ borderColor: 'red', borderWidth: 1 }}>
-                                <DatePicker
-                                    fadeToColor={'white'}
-                                    mode='date'
-                                    date={this.state.tempDate}
-                                    onDateChange={this.setDateOfBirth}
-                                />
-                                <Button style={registrationStyleSheet.close_button}
-                                    mode="outlined"
-                                    labelStyle={{ color: globalColorConstant.LABELCOLOR }}
-                                    onPress={this.closeDatePicker}>Close</Button>
-                            </View>
-                        }
-                    </View>
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorDateOfBirth}</Text>
+            <View style={globalStylesheet.parent_conatiner_view} >
+                <Text style={registrationStyleSheet.header}>Create Account,</Text>
+                <Text style={globalStylesheet.primary_Text}>Sign up to get started!</Text>
+                <View style={registrationStyleSheet.name_container}>
                     <TextInput
-                        style={{ margin: '1%' }}
+                        style={registrationStyleSheet.name_input}
                         mode='outlined'
-                        label='Email'
-                        value={this.state.email}
-                        onChangeText={this.handleEmail}
-                        theme={globalThemeConstant.textInputTheme} />
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorEmail}</Text>
-                    <TextInput
-                        style={{ margin: '1%' }}
-                        mode='outlined'
-                        label='Password'
-                        value={this.state.password}
-                        onChangeText={this.handlePassword}
-                        secureTextEntry={this.state.secure}
+                        label='Firstname'
+                        value={this.state.firstName}
+                        onChangeText={this.handleFirstName}
                         theme={globalThemeConstant.textInputTheme} />
 
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorPassword}</Text>
                     <TextInput
-                        style={{ margin: '1%' }}
+                        style={registrationStyleSheet.name_input}
                         mode='outlined'
-                        label='Confirm Password'
-                        value={this.state.confirmPassword}
-                        onChangeText={this.handleConfirmPassword}
-                        secureTextEntry={this.state.secure}
+                        label='Lastname'
+                        value={this.state.lastName}
+                        onChangeText={this.handleLastName}
                         theme={globalThemeConstant.textInputTheme} />
-                    <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorConfirmPassword}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Checkbox
-                            status={this.state.checked ? "checked" : "unchecked"}
-                            onPress={this.setChecked}
-                            uncheckedColor='red'
-                        />
-                        <Text style={{ margin: '1%' }}>Show Password</Text>
-                    </View>
-
-                    <Button mode='contained'
-                        style={registrationStyleSheet.button}
-                        labelStyle={{ fontSize: 20 }}
-                        onPress={this.userRegister}
-                        theme={globalThemeConstant.textInputTheme}>Sign up</Button>
                 </View>
-            </ScrollView>
 
+                <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorFirstName}
+                    <Text style={{ marginLeft: '1%', color: 'red' }}> {this.state.errorLastName}</Text>
+                </Text>
+
+                <View style={{ alignContent: 'center', flexDirection: 'column' }}>
+
+                    <TouchableOpacity onPress={this.openDatePicker}>
+                        <Text style={{ color: 'red' }}>Select Date : {this.state.dateOfBirth}</Text>
+                    </TouchableOpacity>
+                    {
+                        this.state.datePickerVisibility &&
+                        <View style={{ borderColor: 'red', borderWidth: 1 }}>
+                            <DatePicker
+                                fadeToColor={'white'}
+                                mode='date'
+                                date={this.state.tempDate}
+                                onDateChange={this.setDateOfBirth}
+                            />
+                            <Button style={registrationStyleSheet.close_button}
+                                mode="outlined"
+                                labelStyle={{ color: globalColorConstant.LABELCOLOR }}
+                                onPress={this.closeDatePicker}>Close</Button>
+                        </View>
+                    }
+                </View>
+                <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorDateOfBirth}</Text>
+                <TextInput
+                    style={{ margin: '1%' }}
+                    mode='outlined'
+                    label='Email'
+                    value={this.state.email}
+                    onChangeText={this.handleEmail}
+                    theme={globalThemeConstant.textInputTheme} />
+                <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorEmail}</Text>
+                <TextInput
+                    style={{ margin: '1%' }}
+                    mode='outlined'
+                    label='Password'
+                    value={this.state.password}
+                    onChangeText={this.handlePassword}
+                    secureTextEntry={this.state.secure}
+                    theme={globalThemeConstant.textInputTheme} />
+
+                <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorPassword}</Text>
+                <TextInput
+                    style={{ margin: '1%' }}
+                    mode='outlined'
+                    label='Confirm Password'
+                    value={this.state.confirmPassword}
+                    onChangeText={this.handleConfirmPassword}
+                    secureTextEntry={this.state.secure}
+                    theme={globalThemeConstant.textInputTheme} />
+                <Text style={{ marginLeft: '1%', color: 'red' }}>{this.state.errorConfirmPassword}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Checkbox
+                        status={this.state.checked ? "checked" : "unchecked"}
+                        onPress={this.setChecked}
+                        uncheckedColor='red'
+                    />
+                    <Text style={{ margin: '1%' }}>Show Password</Text>
+                </View>
+
+                <Button mode='contained'
+                    style={registrationStyleSheet.button_SignUp}
+                    labelStyle={{ fontSize: 20 }}
+                    onPress={this.userRegister}
+                    theme={globalThemeConstant.textInputTheme}>Sign up</Button>
+
+                <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems: 'flex-end' }}>
+                    <Text>I already have account,</Text>
+                    <TouchableOpacity onPress={this.goToLogin}>
+                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Sign In</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         )
 
     }

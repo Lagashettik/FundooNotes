@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles'
 import { loginStylesheet } from '../styles/login.styles'
 import { globalColorConstant, globalThemeConstant } from '../styles/globalStyleData.styles'
 import UserServices from '../../services/userServices';
+import SocialServices from '../../services/socialServices'
 
 export default class Login extends Component {
     constructor(props) {
@@ -14,7 +15,10 @@ export default class Login extends Component {
             password: '',
             errorEmail: '',
             errorPassword: '',
-            error: ''
+            error: '',
+            user_name: '',
+            avatar_url: '',
+            avatar_show: false
         }
     }
 
@@ -47,6 +51,8 @@ export default class Login extends Component {
                 this.setState({
                     error: value
                 })
+                console.log(this.state.error)
+                console.log(this.state.errorEmail)
             }
         } else {
             this.setState({
@@ -99,8 +105,14 @@ export default class Login extends Component {
     }
 
     facebookLogin = () => {
-
+        let socialServices = new SocialServices()
+        socialServices.facebookLogin()
     }
+
+    // onLogout = () => {
+    //     this.setState({ user_name: null, avatar_url: null, avatar_show: false });
+    // }
+
 
     googleLogin = () => {
 
@@ -129,7 +141,7 @@ export default class Login extends Component {
                         label='Password'
                         value={this.state.password}
                         onChangeText={this.handlePassword}
-                        selectionColor={globalColorConstant.selectorcolor}
+                        selectionColor={globalColorConstant.SELECTORCOLOR}
                         secureTextEntry={true}
                         theme={globalThemeConstant.textInputTheme}
                     />
@@ -146,12 +158,25 @@ export default class Login extends Component {
                         onPress={this.userLogin}
                     > Sign In</Button>
 
+                    <Text style={{ color: 'blue', alignSelf: 'center', marginTop: '10%' }}>
+                        -------------------------------------or--------------------------------------
+                    </Text>
+
                     <Button
                         mode='contained'
                         icon='facebook'
                         style={loginStylesheet.button_Facebook_SignIn}
                         onPress={this.facebookLogin}
                     > Connect with Facebook</Button>
+
+                    <Text > {this.state.user_name} </Text>
+
+                    {/* <LoginButton
+                        readPermissions={['public_profile']}
+                        style={loginStylesheet.button_Facebook_SignIn}
+                        onLoginFinished={this.facebookLogin}
+                        onLogoutFinished={this.onLogout}
+                    /> */}
 
                     <Button
                         mode='contained'
