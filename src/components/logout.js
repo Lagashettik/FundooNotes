@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles';
-import firebase from '../../database/firebase'
 import UserServices from '../../services/userServices';
-
 
 export default class Logout extends Component {
 

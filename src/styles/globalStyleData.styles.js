@@ -25,4 +25,13 @@ const globalThemeConstant = {
     }
 }
 
-export { globalColorConstant, globalFontConstant, globalThemeConstant }
+const globalLabelConstant = {
+    educational : 'Educational',
+    document : 'Document',
+    personal : 'Personal',
+    work : 'Work',
+    inspiration : 'Inspiration',
+    other : 'Other'
+}
+
+export { globalColorConstant, globalFontConstant, globalThemeConstant, globalLabelConstant }
