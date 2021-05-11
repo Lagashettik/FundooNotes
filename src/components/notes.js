@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, BackHandler } from 'react-native';
 import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
 import { NotesData } from '../../database/notesData';
 import DataServices from '../../services/dataServices';
@@ -45,6 +45,25 @@ export default class Notes extends Component {
         await new DataServices().saveNotesToDatabase(NotesData)
     }
 
+    backAction = async () => {
+        await this.createNote()
+        this.props.navigation.goBack()
+        return true;
+    };
+
+    componentDidMount() {
+        console.log("Note Start")
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.backAction
+        );
+    }
+
+    componentWillUnmount() {
+        console.log("Note End")
+        this.backHandler.remove();
+    }
+
     render() {
         return (
             <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor: 'white' }}>
@@ -61,8 +80,8 @@ export default class Notes extends Component {
                             <IconButton icon="archive" color='red' />
                         </View>
                     </Appbar>
-                    <TextInput placeholder="Title" 
-                    style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
+                    <TextInput placeholder="Title"
+                        style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
                         placeholderTextColor='gray' mode='flat'
 
                         theme={{
@@ -83,7 +102,7 @@ export default class Notes extends Component {
                         value={this.state.note}
                         onChangeText={this.handleNote} />
                 </View>
-                <Appbar theme={{ colors: { primary: 'white' } }} style={{ justifyContent: 'space-between', height:'7%' }}>
+                <Appbar theme={{ colors: { primary: 'white' } }} style={{ justifyContent: 'space-between', height: '7%' }}>
                     <IconButton icon="plus-box-outline" color='red' />
                     <IconButton icon="dots-vertical" color='red' />
                 </Appbar>
