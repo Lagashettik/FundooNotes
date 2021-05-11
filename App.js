@@ -1,7 +1,5 @@
-// import 'react-native-gesture-handler';
-
 import React from 'react';
-import ApplicationStack from './src/navigation/applicationStack'
+import ApplicationStack from './src/navigation/applicationStack';
 
 const App = () => {
   return (

@@ -1,13 +1,16 @@
 import firebase from '../database/firebase'
+import DataServices from './dataServices';
 
 class UserServices {
 
-    userLogin = (email, password) => {
+    userLogin = async (email, password) => {
         let errorMessage = '';
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then((res) => {
+            .then((userCredential) => {
+                console.log("User Credentials : " + userCredential)
+                new DataServices().storeUIdToStorage(userCredential.user.uid)
                 console.log('User logged-in successfully!')
             })
             .catch(error => {
@@ -18,15 +21,18 @@ class UserServices {
         return errorMessage
     }
 
-    userRegister = (user, password) => {
+    userRegister = async (user, password) => {
         let errorMessage = '';
         firebase
             .auth()
             .createUserWithEmailAndPassword(user.emailId, password)
-            .then(() => {
+            .then(async (userCredential) => {
                 console.log('User registration successfully')
                 errorMessage = ''
-                this.saveDataToDatabase(user)
+                await new DataServices().storeUIdToStorage(userCredential.user.uid)
+                console.log("after storage save")
+                await this.saveUserToDatabase(user)
+                console.log("end")
             })
             .catch(error => {
                 console.log(error.message)
@@ -36,11 +42,13 @@ class UserServices {
         return errorMessage
     }
 
-    userLogout = () => {
+    userLogout = async () => {
         let errorMessage = '';
-        firebase.auth().signOut().then(() => {
+        await firebase.auth().signOut().then(async () => {
             errorMessage = ''
             console.log('No Error')
+            dataServices = await new DataServices()
+            .removeUIdFromStorage();
         })
             .catch(error => {
                 errorMessage = error.message
@@ -62,8 +70,14 @@ class UserServices {
         return errorMessage
     }
 
-    saveDataToDatabase = (user) =>{
-        firebase.database().ref('/users').push(user)
+    saveUserToDatabase = (user) => {
+        console.log("save database start")
+        new DataServices().getUIdFromStorage()
+            .then(async uid => {
+                await firebase.database().ref('/users').child(uid).push(user)
+                console.log("User done")
+            })
+            .catch(error => console.log(error))
     }
 
 }

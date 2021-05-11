@@ -13,13 +13,13 @@ const Stack = createStackNavigator();
 ApplicationStack = () => {
     return (
         <NavigationContainer >
-            <Stack.Navigator initialRouteName="dashboard" headerMode='none'>
+            <Stack.Navigator initialRouteName="login" headerMode='none'>
                 <Stack.Screen name="registration" component={Registration} />
                 <Stack.Screen name="login" component={Login} />
                 <Stack.Screen name="forgot-password" component={ForgotPassword} />
                 <Stack.Screen name="logout" component={Logout} />
                 <Stack.Screen name="dashboard" component={Dashboard} />
-                <Stack.Screen name="notes" component={Notes}/>
+                <Stack.Screen name="notes" component={Notes} />
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -42,7 +42,7 @@ class SocialServices {
                                 date: '',
                                 emailId: userCredentials.additionalUserInfo.profile.email
                             }
-                            new UserServices().saveDataToDatabase(user)
+                            new UserServices().saveUserToDatabase(user)
                         }).catch(error => {
                             console.log(error);
                         });

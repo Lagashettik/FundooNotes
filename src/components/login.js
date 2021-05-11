@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper'
 import { globalStylesheet } from '../styles/global.styles'
 import { loginStylesheet } from '../styles/login.styles'
@@ -46,7 +46,7 @@ export default class Login extends Component {
                     password: '',
                     errorEmail: ''
                 })
-                this.props.navigation.navigate('dashboard')
+                this.props.navigation.navigate('menu-drawer')
             } else {
                 this.setState({
                     error: value
@@ -109,14 +109,11 @@ export default class Login extends Component {
         socialServices.facebookLogin()
     }
 
-    // onLogout = () => {
-    //     this.setState({ user_name: null, avatar_url: null, avatar_show: false });
-    // }
-
 
     googleLogin = () => {
-
+        Alert.alert("Google login not available")
     }
+
 
     render() {
         return (
@@ -170,13 +167,6 @@ export default class Login extends Component {
                     > Connect with Facebook</Button>
 
                     <Text > {this.state.user_name} </Text>
-
-                    {/* <LoginButton
-                        readPermissions={['public_profile']}
-                        style={loginStylesheet.button_Facebook_SignIn}
-                        onLoginFinished={this.facebookLogin}
-                        onLogoutFinished={this.onLogout}
-                    /> */}
 
                     <Button
                         mode='contained'

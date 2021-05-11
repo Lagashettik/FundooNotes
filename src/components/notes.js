@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
 import { NotesData } from '../../database/notesData';
+import DataServices from '../../services/dataServices';
 import { globalLabelConstant } from '../styles/globalStyleData.styles'
 
 export default class Notes extends Component {
@@ -31,7 +32,7 @@ export default class Notes extends Component {
         this.props.navigation.navigate('dashboard')
     }
 
-    createNote = () => {
+    createNote = async () => {
         let note = { ...this.state }
         console.log(note)
         console.log("Array Size : " + NotesData.length)
@@ -41,6 +42,7 @@ export default class Notes extends Component {
             note: '',
             label: ''
         })
+        await new DataServices().saveNotesToDatabase(NotesData)
     }
 
     render() {
@@ -59,28 +61,29 @@ export default class Notes extends Component {
                             <IconButton icon="archive" color='red' />
                         </View>
                     </Appbar>
-                    <TextInput placeholder="Title" style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
-                        underlineColor='transparant' placeholderTextColor='gray' mode='flat'
+                    <TextInput placeholder="Title" 
+                    style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
+                        placeholderTextColor='gray' mode='flat'
 
                         theme={{
                             colors: {
-                                primary: 'transparant',
+                                primary: 'red',
                                 text: 'black'
                             }
                         }}
                         value={this.state.title}
                         onChangeText={this.handleTitle} />
                     <TextInput placeholder="Note" style={{ backgroundColor: 'white' }}
-                        multiline={true} mode='flat' underlineColor='white'
+                        multiline={true} mode='flat'
                         theme={{
                             colors: {
-                                primary: 'transparant'
+                                primary: 'red'
                             }
                         }}
                         value={this.state.note}
                         onChangeText={this.handleNote} />
                 </View>
-                <Appbar theme={{ colors: { primary: 'white' } }} style={{ justifyContent: 'space-between' }}>
+                <Appbar theme={{ colors: { primary: 'white' } }} style={{ justifyContent: 'space-between', height:'7%' }}>
                     <IconButton icon="plus-box-outline" color='red' />
                     <IconButton icon="dots-vertical" color='red' />
                 </Appbar>

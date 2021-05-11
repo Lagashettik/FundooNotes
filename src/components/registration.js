@@ -5,7 +5,7 @@ import DatePicker from 'react-native-date-picker'
 import moment from 'moment'
 import { globalStylesheet } from '../styles/global.styles'
 import { registrationStyleSheet } from '../styles/registration.styles'
-import { globalColorConstant, globalThemeConstant } from "../styles/globalStyleData.styles"
+import { globalColorConstant, globalFontConstant, globalThemeConstant } from "../styles/globalStyleData.styles"
 import UserServices from "../../services/userServices"
 
 export default class Registration extends Component {
@@ -32,7 +32,7 @@ export default class Registration extends Component {
         }
     }
 
-    userRegister = () => {
+    userRegister = async () => {
         if (this.state.email == '' && this.state.password == '') {
             this.setState({
                 snackVisible: true
@@ -46,7 +46,7 @@ export default class Registration extends Component {
                 date: this.state.dateOfBirth.toString(),
                 emailId: this.state.email
             }
-            let value = userServices.userRegister(user, this.state.password)
+            let value = await userServices.userRegister(user, this.state.password)
             if (value == '') {
                 this.setState({
                     firstName: '',
@@ -55,9 +55,12 @@ export default class Registration extends Component {
                     password: '',
                     confirmPassword: ''
                 })
+
+                this.props.navigation.navigate('dashboard')
             } else {
                 console.log('errorMessage' + value)
             }
+            
         }
     }
 
@@ -203,7 +206,7 @@ export default class Registration extends Component {
                 <View style={{ alignContent: 'center', flexDirection: 'column' }}>
 
                     <TouchableOpacity onPress={this.openDatePicker}>
-                        <Text style={{ color: 'red' }}>Select Date : {this.state.dateOfBirth}</Text>
+                        <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>Select Date : {this.state.dateOfBirth}</Text>
                     </TouchableOpacity>
                     {
                         this.state.datePickerVisibility &&
@@ -216,7 +219,7 @@ export default class Registration extends Component {
                             />
                             <Button style={registrationStyleSheet.close_button}
                                 mode="outlined"
-                                labelStyle={{ color: globalColorConstant.LABELCOLOR }}
+                                labelStyle={{ color: globalColorConstant.PRIMARYCOLOR }}
                                 onPress={this.closeDatePicker}>Close</Button>
                         </View>
                     }
@@ -255,7 +258,7 @@ export default class Registration extends Component {
                         onPress={this.setChecked}
                         uncheckedColor='red'
                     />
-                    <Text style={{ margin: '1%' }}>Show Password</Text>
+                    <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>Show Password</Text>
                 </View>
 
                 <Button mode='contained'

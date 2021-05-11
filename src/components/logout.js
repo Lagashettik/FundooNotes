@@ -6,9 +6,9 @@ import UserServices from '../../services/userServices';
 
 export default class Logout extends Component {
 
-    logout = () => {
+    logout = async () => {
         let userServices = new UserServices()
-        let value = userServices.userLogout()
+        let value = await userServices.userLogout()
         if( value == '')
         this.props.navigation.navigate('login')
         else

@@ -21,8 +21,7 @@ export const registrationStyleSheet = StyleSheet.create({
         height: '7%'
     },
     close_button: {
-        alignSelf: 'flex-end',
-        backgroundColor: 'red'
+        alignSelf: 'flex-end'
     }
 
 })
