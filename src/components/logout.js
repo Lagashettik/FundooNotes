@@ -21,9 +21,9 @@ export default class Logout extends Component {
         return (
             <View style={globalStylesheet.parent_conatiner_view}>
                 <Text style={{fontSize: 40, fontWeight : 'bold'}}>Welcome,</Text>
-                <Text style={{ color: 'red', fontSize : 20 }}>Krishna
-                <Text style={{fontSize : 15, color : 'black'}}> {'\n'}successfully Logged In</Text></Text>
-                <Button onPress={this.logout} >Logout</Button>
+                <Text style={{fontSize : 20, color : 'black'}}> {'\n'}successfully Logged In</Text>
+                <Button mode='contained' onPress={this.logout}
+                style={{marginTop : '10%', backgroundColor : 'red'}} >Logout</Button>
             </View>
         )
     }
