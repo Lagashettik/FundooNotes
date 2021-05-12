@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { Appbar, Button, Text, Searchbar, IconButton, Card, FAB } from 'react-native-paper';
 import { NotesData } from '../../database/notesData';
 import UserServices from '../../services/userServices';
+import DisplayNotes from './displayNotes';
 
 export default class Dashboard extends Component {
     constructor() {
         super()
         this.state = {
-            showListOrGrid: true
+            showGrid: false
         }
     }
 
     logout = async () => {
         let userServices = new UserServices()
         let value = await userServices.userLogout()
-        if( value == '')
-        this.props.navigation.navigate('login')
+        if (value == '')
+            this.props.navigation.navigate('login')
         else
-        console.log(value)
+            console.log(value)
     }
 
     goToNotes = () => {
@@ -35,27 +36,17 @@ export default class Dashboard extends Component {
                         }
                     }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <IconButton icon="view-headline" size={30} color='white' onPress={()=> this.props.navigation.toggleDrawer()}/>
+                            <IconButton icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
                             <Searchbar style={{ width: '60%', height: 40, alignSelf: 'center' }} placeholder='Search notes' />
-                            <IconButton icon={this.state.showListOrGrid ? "view-agenda-outline" : "view-grid-outline"}
+                            <IconButton icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"  }
                                 size={30}
                                 color='white'
-                                onPress={() => this.setState({ showListOrGrid: !this.state.showListOrGrid })} />
-                            <IconButton icon="face" color='white' size={30} style={{ marginLeft: -10 }} onPress={this.logout}/>
+                                onPress={() => this.setState({ showGrid: !this.state.showGrid })} />
+                            <IconButton icon="face" color='white' size={30} style={{ marginLeft: -10 }} onPress={this.logout} />
                         </View>
                     </Appbar>
-                        <View >
-                            {
-                                NotesData.map(data =>
-                                    // <View style={{ width: '50%', borderWidth: 1, borderRadius: 10, marginLeft: 50, height: '30%' }}>
-                                    // <Text>{data.title}</Text>
-                                    // </View>
-                                    <Card style={{ margin: 10 }} key={NotesData.indexOf(data)}>
-                                        <Card.Title title={data.title} subtitle={data.note} />
-                                    </Card>
-                                )
-                            }
-                        </View>
+
+                    <DisplayNotes showGrid={()=>this.state.showGrid}/>
                 </View>
 
                 <Appbar style={{ height: '7%', backgroundColor: 'red', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>

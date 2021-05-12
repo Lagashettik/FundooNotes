@@ -8,11 +8,11 @@ const Drawer = createDrawerNavigator();
 
 const MenuDrawer = () => {
     return (
-            <Drawer.Navigator drawerType='slide' drawerStyle={{width : '50%'}}>
-                <Drawer.Screen name="dashboard" component={Dashboard} />
-                <Drawer.Screen name="notes" component={Notes} />
-                <Drawer.Screen name="Sign Out" component={Logout} />
-            </Drawer.Navigator>
+        <Drawer.Navigator drawerType='slide' drawerStyle={{ width: '50%' }}>
+            <Drawer.Screen name="dashboard" component={Dashboard} />
+            <Drawer.Screen name="notes" component={Notes} />
+            <Drawer.Screen name="Sign Out" component={Logout} />
+        </Drawer.Navigator>
     );
 }
 

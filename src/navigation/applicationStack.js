@@ -21,7 +21,7 @@ ApplicationStack = () => {
                 <Stack.Screen name="logout" component={Logout} />
                 <Stack.Screen name="dashboard" component={Dashboard} />
                 <Stack.Screen name="notes" component={Notes} />
-                <Stack.Screen name="menu-drawer" component={MenuDrawer} />
+                <Stack.Screen name="home-page" component={MenuDrawer} />
             </Stack.Navigator>
         </NavigationContainer>
     )

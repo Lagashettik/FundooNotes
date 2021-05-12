@@ -1,11 +1,12 @@
-import { LoginButton, AccessToken, GraphRequest, GraphRequestManager, LoginManager } from 'react-native-fbsdk-next';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import firebase from '../database/firebase'
 import UserServices from '../services/userServices';
+import DataServices from './dataServices';
 
 class SocialServices {
 
     facebookLogin = () => {
-
+        login = false
         LoginManager
             .logInWithPermissions(['public_profile', 'email'])
             .then(async (result) => {
@@ -19,14 +20,14 @@ class SocialServices {
                         .getCurrentAccessToken()
                         .then((data) => loginToken = data.accessToken.toString())
 
-                    console.log(loginToken)
+                    console.log("FbLoginToken : " + JSON.stringify(loginToken))
                     const credential =
-                        firebase
+                        await firebase
                             .auth
                             .FacebookAuthProvider
                             .credential(loginToken);
 
-                    console.log(credential)
+                    console.log("FbCredentials : " + JSON.stringify(credential))
 
                     // let responce = firebase
                     // .auth().currentUser
@@ -35,19 +36,21 @@ class SocialServices {
                     // console.log(responce)
 
                     firebase
-                        .auth().signInWithCredential(credential).then(userCredentials => {
+                        .auth().signInWithCredential(credential).then(async userCredentials => {
+                            console.log("UserCredentials : " + JSON.stringify(userCredentials))
                             const user = {
                                 firstName: userCredentials.additionalUserInfo.profile.first_name,
                                 lastName: userCredentials.additionalUserInfo.profile.last_name,
                                 date: '',
                                 emailId: userCredentials.additionalUserInfo.profile.email
                             }
+                            await new DataServices().storeUIdToStorage(userCredentials.user.uid)
+                            console.log("User : " + user)
                             new UserServices().saveUserToDatabase(user)
                         }).catch(error => {
-                            console.log(error);
+                            console.log("error : " + error);
                         });
-                        this.props.navigation.navigate('logout')
-                    }
+                }
             },
                 (error) => {
                     console.log(error)

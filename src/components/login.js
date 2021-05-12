@@ -46,7 +46,7 @@ export default class Login extends Component {
                     password: '',
                     errorEmail: ''
                 })
-                this.props.navigation.navigate('menu-drawer')
+                this.props.navigation.navigate('home-page')
             } else {
                 this.setState({
                     error: value
@@ -107,6 +107,7 @@ export default class Login extends Component {
     facebookLogin = () => {
         let socialServices = new SocialServices()
         socialServices.facebookLogin()
+        this.props.navigation.navigate('home-page')
     }
 
 

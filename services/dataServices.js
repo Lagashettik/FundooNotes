@@ -5,10 +5,10 @@ class DataServices {
 
     saveNotesToDatabase = async (note) => {
         let uid = ''
+        console.log("Note" + note)
         await this.getUIdFromStorage().then(data => uid = data)
         key = await firebase.database()
-            .ref('/notes')
-            .child(uid)
+            .ref('/notes' + uid)
             .push(note)
             .key
 
