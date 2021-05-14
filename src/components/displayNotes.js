@@ -1,33 +1,45 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-import { NotesData } from '../../database/notesData';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
+import NotesData from '../../database/notesData';
 import { Card } from 'react-native-paper'
 
 export default class DisplayNotes extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-            showGrid : this.props.showGrid()
+            showGrid: this.props.showGrid(),
+            keys: []
         }
     }
 
     static getDerivedStateFromProps(props, state) {
-        return{
-            showGrid : props.showGrid()
+        return {
+            showGrid: props.showGrid()
         }
+    }
+
+    editNote = (key) => {
+        console.log("Note : " + JSON.stringify(this.props.notes[key]) + " Key : " + key)
+        this.props.navigation.push('notes', { note: this.props.notes[key], key: key })
     }
 
     render() {
         return (
-            <View style={{width : '100%', flexDirection: 'row', flexWrap  :'wrap'}}>
-                {
-                    NotesData.map(data =>
-                        <Card style={{ margin: 10, width : this.state.showGrid ? '44%' : '100%' }} key={NotesData.indexOf(data) }>
-                            <Card.Title title={data.title} subtitle={data.note} />
-                        </Card>
-                    )
-                }
-            </View>
+            <ScrollView 
+            contentContainerStyle={{flexDirection : 'row', flexWrap : 'wrap'}}
+            style={{height : '90%'}}>
+                {/* <View style={{flexDirection : 'row', flexWrap : 'wrap'}}> */}
+                    {
+                        Object.getOwnPropertyNames(this.props.notes).map((key, index) => {
+                            return (<Card key={key}
+                                onPress={() => this.editNote(key)}
+                                style={{ margin: 10, width: this.state.showGrid ? '44%' : '100%' }}>
+                                <Card.Title title={this.props.notes[key].title} subtitle={this.props.notes[key].note} />
+                            </Card>)
+                        })
+                    }
+                {/* </View> */}
+            </ScrollView>
         )
     }
 }

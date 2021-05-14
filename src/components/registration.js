@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { TextInput, Button, Checkbox } from 'react-native-paper'
 import DatePicker from 'react-native-date-picker'
 import moment from 'moment'

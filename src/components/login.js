@@ -104,10 +104,13 @@ export default class Login extends Component {
 
     }
 
-    facebookLogin = () => {
+    facebookLogin = async () => {
         let socialServices = new SocialServices()
-        socialServices.facebookLogin()
+        login = await socialServices.facebookLogin()
+        if(login == true)
         this.props.navigation.navigate('home-page')
+        else
+        this.props.navigation.navigate('login')
     }
 
 

@@ -9,7 +9,6 @@ class UserServices {
             .auth()
             .signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                console.log("User Credentials : " + userCredential)
                 new DataServices().storeUIdToStorage(userCredential.user.uid)
                 console.log('User logged-in successfully!')
             })
@@ -31,7 +30,7 @@ class UserServices {
                 errorMessage = ''
                 await new DataServices().storeUIdToStorage(userCredential.user.uid)
                 console.log("after storage save")
-                await this.saveUserToDatabase(user)
+                this.saveUserToDatabase(user)
                 console.log("end")
             })
             .catch(error => {
@@ -48,7 +47,7 @@ class UserServices {
             errorMessage = ''
             console.log('No Error')
             dataServices = await new DataServices()
-            .removeUIdFromStorage();
+                .removeUIdFromStorage();
         })
             .catch(error => {
                 errorMessage = error.message
@@ -74,7 +73,9 @@ class UserServices {
         console.log("save database start")
         new DataServices().getUIdFromStorage()
             .then(async uid => {
-                await firebase.database().ref('/users').child(uid).push(user)
+                await firebase.database()
+                .ref('users/' + uid)
+                .push(user)
                 console.log("User done")
             })
             .catch(error => console.log(error))

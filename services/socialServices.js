@@ -5,9 +5,9 @@ import DataServices from './dataServices';
 
 class SocialServices {
 
-    facebookLogin = () => {
+    facebookLogin = async () => {
         login = false
-        LoginManager
+        await LoginManager
             .logInWithPermissions(['public_profile', 'email'])
             .then(async (result) => {
                 if (result.isCancelled) {
@@ -15,6 +15,7 @@ class SocialServices {
                 } else {
                     console.log('Login success with permission: ' + result.grantedPermissions.toString())
                     console.log(result)
+                    login = true
                     let loginToken;
                     await AccessToken
                         .getCurrentAccessToken()
@@ -29,19 +30,12 @@ class SocialServices {
 
                     console.log("FbCredentials : " + JSON.stringify(credential))
 
-                    // let responce = firebase
-                    // .auth().currentUser
-                    // .linkAndRetrieveDataWithCredential(credential)
-
-                    // console.log(responce)
-
                     firebase
                         .auth().signInWithCredential(credential).then(async userCredentials => {
                             console.log("UserCredentials : " + JSON.stringify(userCredentials))
                             const user = {
                                 firstName: userCredentials.additionalUserInfo.profile.first_name,
                                 lastName: userCredentials.additionalUserInfo.profile.last_name,
-                                date: '',
                                 emailId: userCredentials.additionalUserInfo.profile.email
                             }
                             await new DataServices().storeUIdToStorage(userCredentials.user.uid)
@@ -56,6 +50,7 @@ class SocialServices {
                     console.log(error)
                 }
             )
+        return login
     }
 }
 

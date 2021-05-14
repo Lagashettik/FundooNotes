@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { Appbar, Button, Text, Searchbar, IconButton, Card, FAB } from 'react-native-paper';
-import { NotesData } from '../../database/notesData';
+import { View } from 'react-native';
+import { Appbar, Searchbar, IconButton, FAB } from 'react-native-paper';
+import DataServices from '../../services/dataServices';
 import UserServices from '../../services/userServices';
 import DisplayNotes from './displayNotes';
 
@@ -9,7 +9,8 @@ export default class Dashboard extends Component {
     constructor() {
         super()
         this.state = {
-            showGrid: false
+            showGrid: false,
+            notes : {}
         }
     }
 
@@ -23,7 +24,13 @@ export default class Dashboard extends Component {
     }
 
     goToNotes = () => {
-        this.props.navigation.navigate('notes')
+        this.props.navigation.navigate('notes', { note: undefined, key: undefined })
+    }
+
+    getData = () => {
+        console.log('inside getdata')
+        new DataServices().getNotesFromDatabase().then(data => this.setState({notes : data}))
+            .catch(error => console.log(error))
     }
 
     render() {
@@ -37,16 +44,16 @@ export default class Dashboard extends Component {
                     }}>
                         <View style={{ flexDirection: 'row' }}>
                             <IconButton icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
-                            <Searchbar style={{ width: '60%', height: 40, alignSelf: 'center' }} placeholder='Search notes' />
-                            <IconButton icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"  }
+                            <Searchbar style={{ width: '60%', height: 40, alignSelf: 'center' }} placeholder='Search notes'  />
+                            <IconButton icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"}
                                 size={30}
                                 color='white'
                                 onPress={() => this.setState({ showGrid: !this.state.showGrid })} />
-                            <IconButton icon="face" color='white' size={30} style={{ marginLeft: -10 }} onPress={this.logout} />
+                            <IconButton icon="face" color='white' size={30} style={{ marginLeft: -10 }} onPress={this.getData} />
                         </View>
                     </Appbar>
 
-                    <DisplayNotes showGrid={()=>this.state.showGrid}/>
+                    <DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation} notes={this.state.notes} />
                 </View>
 
                 <Appbar style={{ height: '7%', backgroundColor: 'red', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>

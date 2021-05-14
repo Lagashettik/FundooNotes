@@ -1,4 +1,10 @@
-export const NotesData = [
-    { title: 'React Native', note: 'Programming' },
-    { title: 'Javascript', note: 'js' }
-]
+export const NotesData = {
+    "first" : {
+        title : "Title",
+        note : 'Write note here'
+    },
+    "second" : {
+        title : "Second",
+        note : "Second Note"
+    }
+}

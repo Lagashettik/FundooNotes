@@ -5,36 +5,51 @@ class DataServices {
 
     saveNotesToDatabase = async (note) => {
         let uid = ''
-        console.log("Note" + note)
-        await this.getUIdFromStorage().then(data => uid = data)
-        key = await firebase.database()
-            .ref('/notes' + uid)
+        console.log("Note" + JSON.stringify(note))
+        await this.getUIdFromStorage().then(value => uid = value)
+        await firebase.database()
+            .ref('notes/' + uid)
             .push(note)
-            .key
 
-        await this.storeKeyToStorage(key)
     }
 
     getNotesFromDatabase = async () => {
         uid = await this.getUIdFromStorage()
-        notes = firebase.database().ref('/notes').child(uid).get().then((snapshot) => {
-            if (snapshot.exists()) {
-                console.log(snapshot)
-            } else {
-                console.log('no data')
-            }
-        }).catch((error) => {
-            console.log(error)
+        data = {}
+
+        return new Promise((resolve, reject) => {
+            firebase.database()
+                .ref('notes/' + uid)
+                .once('value')
+                .then((snapshot) => {
+                    console.log(snapshot.val())
+                    resolve(snapshot.val())
+                })
+                .catch(error => reject(error))
+        })
+
+
+    }
+
+    updateNotesToDatabase = (note, key) => {
+        console.log("noteup : " + note + " keyup" + key)
+        return new Promise((resolve, reject) => {
+            firebase.database().ref('/notes/' + uid).child(key)
+                .update(note)
+                .then(() =>
+                    resolve()
+                ).catch(error => reject(error))
         })
     }
 
-    updateNotesToDatabase = async () =>{
-        
+    removeNotesFromDatabase = (key) => {
+        firebase.database().ref('/notes/' + uid).child(key).remove()
     }
 
     storeKeyToStorage = async (key) => {
         try {
-            await AsyncStorage.setItem('key', key)
+            await AsyncStorage.setItem('key', key).then((data) => console.log("Done key store : " + data))
+                .catch(error => console.log("Key store : " + error.message))
         } catch (error) {
             console.log("Async Storage error : " + error)
         }

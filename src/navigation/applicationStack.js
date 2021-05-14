@@ -8,6 +8,7 @@ import Logout from '../components/logout';
 import Dashboard from '../components/dashboard';
 import Notes from '../components/notes';
 import MenuDrawer from './menuDrawer';
+import DisplayNotes from '../components/displayNotes';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ ApplicationStack = () => {
                 <Stack.Screen name="logout" component={Logout} />
                 <Stack.Screen name="dashboard" component={Dashboard} />
                 <Stack.Screen name="notes" component={Notes} />
+                <Stack.Screen name="display-note" component={DisplayNotes} />
                 <Stack.Screen name="home-page" component={MenuDrawer} />
             </Stack.Navigator>
         </NavigationContainer>

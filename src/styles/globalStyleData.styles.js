@@ -1,3 +1,5 @@
+import React from 'react';
+import { Dimensions } from 'react-native';
 
 const globalColorConstant = {
     SELECTORCOLOR: 'red',
