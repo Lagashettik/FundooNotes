@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import { View, BackHandler } from 'react-native';
+import { View, BackHandler, Button } from 'react-native';
 import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
+import NoteBottomSheet from './noteBottomSheet'
 import DataServices from '../../services/dataServices';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 export default class Notes extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            note: "",
             title: "",
-            note: ""
+            noteBottomSheetShow : ''
         }
     }
 
@@ -25,40 +28,58 @@ export default class Notes extends Component {
     }
 
     goToDashboard = () => {
+        this.createOrUpdateNote()
+        this.props.navigation.push('dashboard')
+    }
+
+    createOrUpdateNote = async () => {
         if (this.props.route.params.note == undefined) {
             if (this.state.title != "" || this.state.note != "") {
-                this.createNote()
+                let note = {
+                    title: this.state.title,
+                    note: this.state.note
+                }
+                console.log(note)
+                await new DataServices().saveNotesToDatabase(note)
             }
         } else {
             this.updateNote()
         }
-        this.props.navigation.navigate('dashboard')
-    }
-
-    createNote = async () => {
-        let note = { ...this.state }
-        console.log(note)
-        await new DataServices().saveNotesToDatabase(note)
     }
 
     updateNote = () => {
         console.log("inside update")
-        console.log("state : " + JSON.stringify(this.state) + " key : " + this.props.route.params.key)
-        new DataServices().updateNotesToDatabase(this.state, this.props.route.params.key)
-        .then(() => console.log("Update completed!!!"))
-        .catch(error => console.log(error))
+        console.log("state : " + JSON.stringify({
+            note: this.state.note,
+            note: this.state.title
+        }) + " key : " + this.props.route.params.key)
+        if (!this.checkUpdate()) {
+            let note = {
+                title: this.state.title,
+                note: this.state.note
+            }
+            new DataServices().updateNotesToDatabase(note, this.props.route.params.key)
+                .then(() => console.log("Update completed!!!"))
+                .catch(error => console.log(error))
+        }
     }
 
+    checkUpdate = () => JSON.stringify({
+        note: this.state.note,
+        note: this.state.title
+    }) === JSON.stringify(this.props.route.params.note)
+
+
     deleteNote = () => {
-        if(this.props.route.params.key != undefined){
-        new DataServices().removeNotesFromDatabase(this.props.route.params.key)
+        if (this.props.route.params.key != undefined) {
+            new DataServices().removeNotesFromDatabase(this.props.route.params.key)
             this.props.navigation.navigate('dashboard')
-    }
+        }
     }
 
     backAction = async () => {
-        await this.createNote()
-        this.props.navigation.goBack()
+        await this.createOrUpdateNote()
+        this.props.navigation.push('dashboard')
         return true;
     };
 
@@ -76,7 +97,7 @@ export default class Notes extends Component {
             "hardwareBackPress",
             this.backAction
         );
-        
+
     }
 
     componentWillUnmount() {
@@ -100,13 +121,12 @@ export default class Notes extends Component {
                         <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
                             <IconButton icon="pin-outline" color='red' />
                             <IconButton icon="bell-plus-outline" color='red' />
-                            <IconButton icon={require('../assets/archive.png')} color='red' />
+                            <IconButton icon="archive" color='red' />
                         </View>
                     </Appbar>
                     <TextInput placeholder="Title"
                         style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
                         placeholderTextColor='gray' mode='flat'
-
                         theme={{
                             colors: {
                                 primary: 'red',
@@ -125,9 +145,19 @@ export default class Notes extends Component {
                         value={this.state.note}
                         onChangeText={this.handleNote} />
                 </View>
-                <Appbar theme={{ colors: { primary: 'white' } }} style={{ justifyContent: 'space-between', height: '7%' }}>
-                    <IconButton icon="plus-box-outline" color='red' />
-                    <IconButton icon="delete-outline" color='red' onPress={this.deleteNote} />
+                <Appbar theme={{ colors: { primary: 'white' } }} style={{ height: '7%' }}>
+                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
+                        <IconButton icon="plus-box-outline" color='red' onPress={() => this.setState({
+                            noteBottomSheetShow : 'plus'
+                        })}/>
+                        <IconButton icon="dots-vertical" color='red' onPress={() => this.setState({
+                            noteBottomSheetShow : 'dots'
+                        })} />
+                        {
+                            this.state.noteBottomSheetShow == 'plus' ? <NoteBottomSheet open='plus'/>
+                            : this.state.noteBottomSheetShow == 'dots' ? <NoteBottomSheet open='dots' /> : null
+                        }
+                    </View>
                 </Appbar>
             </View>
         )

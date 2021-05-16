@@ -10,7 +10,7 @@ export default class Dashboard extends Component {
         super()
         this.state = {
             showGrid: false,
-            notes : {}
+            notes: {}
         }
     }
 
@@ -29,13 +29,24 @@ export default class Dashboard extends Component {
 
     getData = () => {
         console.log('inside getdata')
-        new DataServices().getNotesFromDatabase().then(data => this.setState({notes : data}))
+        new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
             .catch(error => console.log(error))
+    }
+
+    componentDidMount() {
+        new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
+            .catch(error => console.log(error))
+    }
+
+    componentWillUnmount() {
+        this.setState({
+            notes: {}
+        })
     }
 
     render() {
         return (
-            <View style={{ height: '100%' }}>
+            <View style={{ height: '100%', justifyContent: 'space-between' }}>
                 <View style={{ height: '93%' }}>
                     <Appbar theme={{
                         colors: {
@@ -43,13 +54,13 @@ export default class Dashboard extends Component {
                         }
                     }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <IconButton icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
-                            <Searchbar style={{ width: '60%', height: 40, alignSelf: 'center' }} placeholder='Search notes'  />
-                            <IconButton icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"}
+                            <Appbar.Action icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
+                            <Searchbar style={{ width: '60%', height: 40, alignSelf: 'center' }} placeholder='Search notes' />
+                            <Appbar.Action icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"}
                                 size={30}
                                 color='white'
                                 onPress={() => this.setState({ showGrid: !this.state.showGrid })} />
-                            <IconButton icon="face" color='white' size={30} style={{ marginLeft: -10 }} onPress={this.getData} />
+                            <IconButton icon="face" size={30} color='white' size={30} style={{ marginLeft: -10 }} onPress={this.logout} />
                         </View>
                     </Appbar>
 
@@ -64,7 +75,7 @@ export default class Dashboard extends Component {
                         <IconButton icon="image-outline" size={30} color='white' />
                     </View >
                     <FAB icon="plus" style={{
-                        position: 'relative', backgroundColor: 'red', marginTop: '-20%', marginRight: '10%', borderColor: 'white',
+                        backgroundColor: 'red', marginRight: '10%', marginTop: '-10%', borderColor: 'white',
                         borderStyle: 'solid', borderWidth: 10, borderRadius: 50
                     }} onPress={this.goToNotes} />
                 </Appbar>

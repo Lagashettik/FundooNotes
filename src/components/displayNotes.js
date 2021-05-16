@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, ScrollView } from 'react-native';
-import NotesData from '../../database/notesData';
 import { Card } from 'react-native-paper'
 
 export default class DisplayNotes extends Component {
@@ -28,17 +27,15 @@ export default class DisplayNotes extends Component {
             <ScrollView 
             contentContainerStyle={{flexDirection : 'row', flexWrap : 'wrap'}}
             style={{height : '90%'}}>
-                {/* <View style={{flexDirection : 'row', flexWrap : 'wrap'}}> */}
                     {
                         Object.getOwnPropertyNames(this.props.notes).map((key, index) => {
                             return (<Card key={key}
                                 onPress={() => this.editNote(key)}
-                                style={{ margin: 10, width: this.state.showGrid ? '44%' : '100%' }}>
+                                style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%' }}>
                                 <Card.Title title={this.props.notes[key].title} subtitle={this.props.notes[key].note} />
                             </Card>)
                         })
                     }
-                {/* </View> */}
             </ScrollView>
         )
     }
