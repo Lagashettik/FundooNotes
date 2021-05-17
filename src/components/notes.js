@@ -11,7 +11,7 @@ export default class Notes extends Component {
         this.state = {
             note: "",
             title: "",
-            noteBottomSheetShow : ''
+            noteBottomSheetShow: ''
         }
     }
 
@@ -29,7 +29,7 @@ export default class Notes extends Component {
 
     goToDashboard = () => {
         this.createOrUpdateNote()
-        this.props.navigation.push('dashboard')
+        this.props.navigation.push('home-page')
     }
 
     createOrUpdateNote = async () => {
@@ -73,25 +73,26 @@ export default class Notes extends Component {
     deleteNote = () => {
         if (this.props.route.params.key != undefined) {
             new DataServices().removeNotesFromDatabase(this.props.route.params.key)
-            this.props.navigation.navigate('dashboard')
+            this.props.navigation.push('home-page')
         }
     }
 
-    backAction = async () => {
-        await this.createOrUpdateNote()
-        this.props.navigation.push('dashboard')
+    backAction = () => {
+        this.createOrUpdateNote()
+        this.props.navigation.push('home-page')
         return true;
     };
 
     componentDidMount() {
-        if (this.props.route.params.note != undefined) {
-            this.setState({
-                title: this.props.route.params.note.title,
-                note: this.props.route.params.note.note
-            })
-        }
+        if (this.props.route.params != undefined)
+            if (this.props.route.params.note != undefined) {
+                this.setState({
+                    title: this.props.route.params.note.title,
+                    note: this.props.route.params.note.note
+                })
+                console.log("params " + JSON.stringify(this.props.route.params.note))
+            }
 
-        console.log("params " + JSON.stringify(this.props.route.params.note))
 
         this.backHandler = BackHandler.addEventListener(
             "hardwareBackPress",
@@ -101,10 +102,13 @@ export default class Notes extends Component {
     }
 
     componentWillUnmount() {
-        this.setState({
-            title: '',
-            note: ''
-        })
+        if (this.props.route.params != undefined)
+            if (this.props.route.params.note != undefined)
+                this.setState({
+                    title: '',
+                    note: ''
+                })
+
         this.backHandler.remove();
     }
 
@@ -148,14 +152,14 @@ export default class Notes extends Component {
                 <Appbar theme={{ colors: { primary: 'white' } }} style={{ height: '7%' }}>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
                         <IconButton icon="plus-box-outline" color='red' onPress={() => this.setState({
-                            noteBottomSheetShow : 'plus'
-                        })}/>
+                            noteBottomSheetShow: 'plus'
+                        })} />
                         <IconButton icon="dots-vertical" color='red' onPress={() => this.setState({
-                            noteBottomSheetShow : 'dots'
+                            noteBottomSheetShow: 'dots'
                         })} />
                         {
-                            this.state.noteBottomSheetShow == 'plus' ? <NoteBottomSheet open='plus'/>
-                            : this.state.noteBottomSheetShow == 'dots' ? <NoteBottomSheet open='dots' /> : null
+                            this.state.noteBottomSheetShow == 'plus' ? <NoteBottomSheet open='plus' />
+                                : this.state.noteBottomSheetShow == 'dots' ? <NoteBottomSheet open='dots' /> : null
                         }
                     </View>
                 </Appbar>

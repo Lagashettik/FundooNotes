@@ -4,7 +4,7 @@ import UserServices from '../../services/userServices';
 
 export default class SplashScreen extends Component {
 
-    enterApp = () => {
+    checkUserLogin = () => {
          new UserServices().checkLoginStatus().then((isLoggedIn) => {
             console.log("data login : " + isLoggedIn)
             if (isLoggedIn === 'true')
@@ -17,7 +17,7 @@ export default class SplashScreen extends Component {
     }
 
     render() {
-        setTimeout(() => this.enterApp(), 2000)
+        setTimeout(() => this.checkUserLogin(), 2000)
         return (
             <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                 <Image source={require('../assets/note_icon.png')} style={{ height: '25%', width: '40%' }}

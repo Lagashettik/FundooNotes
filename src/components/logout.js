@@ -10,7 +10,7 @@ export default class Logout extends Component {
         let userServices = new UserServices()
         let value = await userServices.userLogout()
         if( value == '')
-        this.props.navigation.navigate('login')
+        this.props.navigation.replace('login')
         else
         console.log(value)
     }

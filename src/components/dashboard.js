@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { BackHandler, View } from 'react-native';
 import { Appbar, Searchbar, IconButton, FAB } from 'react-native-paper';
 import DataServices from '../../services/dataServices';
 import UserServices from '../../services/userServices';
@@ -18,7 +18,7 @@ export default class Dashboard extends Component {
         let userServices = new UserServices()
         let value = await userServices.userLogout()
         if (value == '')
-            this.props.navigation.navigate('login')
+            this.props.navigation.replace('login')
         else
             console.log(value)
     }
@@ -34,22 +34,23 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
-        // this.setState({
-        //     note: {}
-        // })
         new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
             .catch(error => console.log(error))
+
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", ()=>BackHandler.exitApp())
     }
 
     componentWillUnmount() {
         this.setState({
             notes: {}
         })
+
+        this.backHandler.remove()
     }
 
     render() {
         return (
-            <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor : 'white' }}>
+            <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor: 'white' }}>
                 <View style={{ height: '93%' }}>
                     <Appbar theme={{
                         colors: {
