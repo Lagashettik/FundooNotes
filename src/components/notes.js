@@ -121,7 +121,7 @@ export default class Notes extends Component {
                         <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
                             <IconButton icon="pin-outline" color='red' />
                             <IconButton icon="bell-plus-outline" color='red' />
-                            <IconButton icon="archive" color='red' />
+                            <IconButton icon={require('../assets/archive.png')} color='red' />
                         </View>
                     </Appbar>
                     <TextInput placeholder="Title"

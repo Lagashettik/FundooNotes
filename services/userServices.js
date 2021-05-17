@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from '../database/firebase'
 import DataServices from './dataServices';
 
@@ -10,6 +11,7 @@ class UserServices {
             .signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 new DataServices().storeUIdToStorage(userCredential.user.uid)
+                this.userLoggedIn()
                 console.log('User logged-in successfully!')
             })
             .catch(error => {
@@ -31,6 +33,7 @@ class UserServices {
                 await new DataServices().storeUIdToStorage(userCredential.user.uid)
                 console.log("after storage save")
                 this.saveUserToDatabase(user)
+                this.userLoggedIn()
                 console.log("end")
             })
             .catch(error => {
@@ -48,6 +51,7 @@ class UserServices {
             console.log('No Error')
             dataServices = await new DataServices()
                 .removeUIdFromStorage();
+                this.userLoggedOut()
         })
             .catch(error => {
                 errorMessage = error.message
@@ -81,5 +85,17 @@ class UserServices {
             .catch(error => console.log(error))
     }
 
+    userLoggedIn = () => {
+        AsyncStorage.setItem('isLoggedIn', 'true' )
+    }
+
+    userLoggedOut = () => {
+        AsyncStorage.setItem('isLoggedIn', 'false')
+    }
+
+    checkLoginStatus = () =>{
+        return AsyncStorage.getItem('isLoggedIn')
+    }
+ 
 }
 export default UserServices;

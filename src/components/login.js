@@ -46,7 +46,7 @@ export default class Login extends Component {
                     password: '',
                     errorEmail: ''
                 })
-                this.props.navigation.navigate('home-page')
+                this.props.navigation.replace('home-page')
             } else {
                 this.setState({
                     error: value

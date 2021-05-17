@@ -31,7 +31,7 @@ export default class DisplayNotes extends Component {
                         Object.getOwnPropertyNames(this.props.notes).map((key, index) => {
                             return (<Card key={key}
                                 onPress={() => this.editNote(key)}
-                                style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%' }}>
+                                style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%' , backgroundColor : 'white'}}>
                                 <Card.Title title={this.props.notes[key].title} subtitle={this.props.notes[key].note} />
                             </Card>)
                         })

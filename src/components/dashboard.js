@@ -34,6 +34,9 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
+        // this.setState({
+        //     note: {}
+        // })
         new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
             .catch(error => console.log(error))
     }
@@ -46,7 +49,7 @@ export default class Dashboard extends Component {
 
     render() {
         return (
-            <View style={{ height: '100%', justifyContent: 'space-between' }}>
+            <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor : 'white' }}>
                 <View style={{ height: '93%' }}>
                     <Appbar theme={{
                         colors: {
@@ -75,7 +78,7 @@ export default class Dashboard extends Component {
                         <IconButton icon="image-outline" size={30} color='white' />
                     </View >
                     <FAB icon="plus" style={{
-                        backgroundColor: 'red', marginRight: '10%', marginTop: '-10%', borderColor: 'white',
+                        backgroundColor: 'red', marginRight: '10%', marginTop: '-15%', borderColor: 'white',
                         borderStyle: 'solid', borderWidth: 10, borderRadius: 50
                     }} onPress={this.goToNotes} />
                 </Appbar>
