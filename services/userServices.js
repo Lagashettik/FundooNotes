@@ -4,22 +4,21 @@ import DataServices from './dataServices';
 
 class UserServices {
 
-    userLogin = async (email, password) => {
-        let errorMessage = '';
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                new DataServices().storeUIdToStorage(userCredential.user.uid)
-                this.userLoggedIn()
-                console.log('User logged-in successfully!')
-            })
-            .catch(error => {
-                console.log(error.message)
-                errorMessage = error.message
-                console.log('errormessage ' + errorMessage)
-            })
-        return errorMessage
+    userLogin = (email, password) => {
+
+        return new Promise((resolve, reject) => {
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    new DataServices().storeUIdToStorage(userCredential.user.uid)
+                    this.userLoggedIn()
+                    console.log('User logged-in successfully!')
+                    resolve()
+                })
+                .catch(error => reject(error.message))
+        })
+
     }
 
     userRegister = async (user, password) => {
@@ -51,7 +50,7 @@ class UserServices {
             console.log('No Error')
             dataServices = await new DataServices()
                 .removeUIdFromStorage();
-                this.userLoggedOut()
+            this.userLoggedOut()
         })
             .catch(error => {
                 errorMessage = error.message
@@ -78,24 +77,24 @@ class UserServices {
         new DataServices().getUIdFromStorage()
             .then(async uid => {
                 await firebase.database()
-                .ref('users/' + uid)
-                .push(user)
+                    .ref('users/' + uid)
+                    .push(user)
                 console.log("User done")
             })
             .catch(error => console.log(error))
     }
 
     userLoggedIn = () => {
-        AsyncStorage.setItem('isLoggedIn', 'true' )
+        AsyncStorage.setItem('isLoggedIn', 'true')
     }
 
     userLoggedOut = () => {
         AsyncStorage.setItem('isLoggedIn', 'false')
     }
 
-    checkLoginStatus = () =>{
+    checkLoginStatus = () => {
         return AsyncStorage.getItem('isLoggedIn')
     }
- 
+
 }
 export default UserServices;

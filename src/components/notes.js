@@ -27,9 +27,10 @@ export default class Notes extends Component {
         })
     }
 
-    goToDashboard = () => {
-        this.createOrUpdateNote()
+    backActionOrGoToDashboard = async () => {
+        await this.createOrUpdateNote()
         this.props.navigation.push('home-page')
+        return true
     }
 
     createOrUpdateNote = async () => {
@@ -69,34 +70,25 @@ export default class Notes extends Component {
         note: this.state.title
     }) === JSON.stringify(this.props.route.params.note)
 
-
-    deleteNote = () => {
-        if (this.props.route.params.key != undefined) {
-            new DataServices().removeNotesFromDatabase(this.props.route.params.key)
-            this.props.navigation.push('home-page')
-        }
-    }
-
-    backAction = () => {
-        this.createOrUpdateNote()
+    backAction = async () => {
+        await this.createOrUpdateNote()
         this.props.navigation.push('home-page')
         return true;
     };
 
     componentDidMount() {
-        if (this.props.route.params != undefined)
-            if (this.props.route.params.note != undefined) {
-                this.setState({
-                    title: this.props.route.params.note.title,
-                    note: this.props.route.params.note.note
-                })
-                console.log("params " + JSON.stringify(this.props.route.params.note))
-            }
+        if (this.props.route.params.note != undefined) {
+            this.setState({
+                title: this.props.route.params.note.title,
+                note: this.props.route.params.note.note
+            })
+        }
 
+        console.log("params " + JSON.stringify(this.props.route.params.note))
 
         this.backHandler = BackHandler.addEventListener(
             "hardwareBackPress",
-            this.backAction
+            this.backActionOrGoToDashboard
         );
 
     }
@@ -127,8 +119,8 @@ export default class Notes extends Component {
     }
 
     archiveNote = () => {
-        if(this.props.route.params.key != undefined)
-        new DataServices().archiveNote(this.props.route.params.key)
+        if (this.props.route.params.key != undefined)
+            new DataServices().archiveNote(this.props.route.params.key)
     }
 
     render() {
@@ -139,7 +131,7 @@ export default class Notes extends Component {
                         style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}
                         theme={{ colors: { primary: 'white' } }}>
                         <View style={{ width: '50%' }}>
-                            <IconButton icon="keyboard-backspace" color='red' onPress={this.goToDashboard} />
+                            <IconButton icon="keyboard-backspace" color='red' onPress={this.backActionOrGoToDashboard} />
                         </View>
                         <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
                             <IconButton icon="pin-outline" color='red' />
@@ -170,11 +162,11 @@ export default class Notes extends Component {
                             onChangeText={this.handleNote} />
                     </View>
                 </View>
+
                 <Appbar theme={{ colors: { primary: 'white' } }} style={{ height: '7%' }}>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
                         <IconButton icon="plus-box-outline" color='red' onPress={this.handlePlusIconButton} />
                         <IconButton icon="dots-vertical" color='red' onPress={this.handleDotsIconButton} />
-
                         <RBSheet
                             ref={ref => {
                                 this.RBSheet = ref;
@@ -184,7 +176,8 @@ export default class Notes extends Component {
                             customStyles={{
                                 container: {
                                     justifyContent: "center",
-                                    alignItems: "center"
+                                    alignItems: "center",
+                                    marginBottom: 60
                                 }
                             }}
                         >{
@@ -196,6 +189,8 @@ export default class Notes extends Component {
                                         brush="brush" brushLabel="Drawing"
                                         mic="microphone-outline" micLabel="Recording"
                                         box="check-box-outline" boxLabel="Tick boxes"
+                                        noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
+                                        navigation={this.props.navigation}
                                     /> :
                                     <RBSheetComponent
                                         selectedIcon={this.state.selectedIcon}
@@ -204,6 +199,8 @@ export default class Notes extends Component {
                                         shareVariant="share-variant" shareVariantLabel="Send"
                                         accountPlusOutline="account-plus-outline" accountPlusOutlineLabel="Collaborator"
                                         labelOutline="label-outline" labelOutlineLabel="Labels"
+                                        noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
+                                        navigation={this.props.navigation}
                                     />
                             }
                         </RBSheet>

@@ -24,13 +24,7 @@ export default class Dashboard extends Component {
     }
 
     goToNotes = () => {
-        this.props.navigation.navigate('notes', { note: undefined, key: undefined })
-    }
-
-    getData = () => {
-        console.log('inside getdata')
-        new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
-            .catch(error => console.log(error))
+        this.props.navigation.push('notes', { note: undefined, key: undefined })
     }
 
     componentDidMount() {
@@ -41,10 +35,6 @@ export default class Dashboard extends Component {
     }
 
     componentWillUnmount() {
-        this.setState({
-            notes: {}
-        })
-
         this.backHandler.remove()
     }
 
@@ -68,7 +58,7 @@ export default class Dashboard extends Component {
                         </View>
                     </Appbar>
 
-                    <DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation} notes={this.state.notes} />
+                    <DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation} notes={this.state.notes} filterNotes={undefined} />
                 </View>
 
                 <Appbar style={{ height: '7%', backgroundColor: 'red', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>

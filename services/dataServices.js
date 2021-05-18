@@ -42,18 +42,24 @@ class DataServices {
         })
     }
 
-    trashNote = (key) =>{
-        
+    deleteNote = async (key) => {
+        console.log(key)
+        deleted = {
+            isDeleted: true
+        }
+        uid = await this.getUIdFromStorage()
+        firebase.database().ref('/notes/' + uid).child(key).update(deleted)
+        console.log("after deleted")
     }
 
-    archiveNote = async (key) =>{
+    archiveNote = async (key) => {
         console.log(key)
         archive = {
-            isArchive : true
+            isArchive: true
         }
         uid = await this.getUIdFromStorage()
         firebase.database().ref('/notes/' + uid).child(key).update(archive)
-        
+
     }
 
     removeNotesFromDatabase = (key) => {

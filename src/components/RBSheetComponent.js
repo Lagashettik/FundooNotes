@@ -1,21 +1,36 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper'
+import DataServices from '../../services/dataServices';
 
 const RBSheetComponent = (props) => {
     console.log(props)
+
+    const deleteNote = async () => {
+        console.log('noteKey : ' + props.noteKey)
+        if (props.noteKey != undefined) {
+            await new DataServices().deleteNote(props.noteKey)
+        }
+        console.log('after noteKey')
+        props.navigation.push('home-page')
+    }
+
     return (
         <View style={{
             width: '100%',
             height: '50%',
             flex: 1,
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
+            justifyContent: 'space-around'
         }}>
             <Button mode='text' theme={{
                 colors: {
                     primary: 'red'
                 }
-            }} icon={props.selectedIcon == "plus" ? props.camera : props.deleteOutline}>
+            }}
+                icon={props.selectedIcon == "plus" ? props.camera : props.deleteOutline}
+                onPress={props.selectedIcon == "plus" ? null : deleteNote}
+            >
                 {props.selectedIcon == "plus" ? props.cameraLabel : props.deleteOutlineLabel}</Button>
             <Button mode='text' theme={{
                 colors: {
@@ -44,5 +59,7 @@ const RBSheetComponent = (props) => {
         </View>
     )
 }
+
+
 
 export default RBSheetComponent

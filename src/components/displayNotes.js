@@ -6,20 +6,22 @@ export default class DisplayNotes extends Component {
    constructor(props) {
       super(props)
       this.state = {
-         showGrid: this.props.showGrid(),
+         showGrid: false,
          keys: []
       }
    }
 
    static getDerivedStateFromProps(props, state) {
-      return {
-         showGrid: props.showGrid()
-      }
+      if (props.showGrid != undefined)
+         return {
+            showGrid: props.showGrid()
+         }
+      else return {showGrid : false}
    }
 
-   editNote = (key) => {
-      console.log("Note : " + JSON.stringify(this.props.notes[key]) + " Key : " + key)
-      this.props.navigation.push('notes', { note: this.props.notes[key], key: key })
+   editNote = (noteKey) => {
+      console.log("Note : " + JSON.stringify(this.props.notes[noteKey]) + " Key : " + noteKey)
+      this.props.navigation.push('notes', { note: this.props.notes[noteKey], key: noteKey })
    }
 
    filterNotes = (isArchive, isDeleted) => {

@@ -39,21 +39,21 @@ export default class Login extends Component {
             })
         } else if (regex.test(this.state.email)) {
             let userServices = new UserServices()
-            let value = await userServices.userLogin(this.state.email, this.state.password)
-            if (value == '') {
-                this.setState({
-                    email: '',
-                    password: '',
-                    errorEmail: ''
+            await userServices.userLogin(this.state.email, this.state.password)
+                .then(() => {
+                    this.setState({
+                        email: '',
+                        password: '',
+                        errorEmail: ''
+                    })
+                    this.props.navigation.replace('home-page')
                 })
-                this.props.navigation.replace('home-page')
-            } else {
-                this.setState({
-                    error: value
+                .catch(error => {
+                    this.setState({
+                        error : error
+                    })
+                    console.log(error)
                 })
-                console.log(this.state.error)
-                console.log(this.state.errorEmail)
-            }
         } else {
             this.setState({
                 errorEmail: 'Invalid Email id',
@@ -107,10 +107,10 @@ export default class Login extends Component {
     facebookLogin = async () => {
         let socialServices = new SocialServices()
         login = await socialServices.facebookLogin()
-        if(login == true)
-        this.props.navigation.navigate('home-page')
+        if (login == true)
+            this.props.navigation.navigate('home-page')
         else
-        this.props.navigation.navigate('login')
+            this.props.navigation.navigate('login')
     }
 
 
