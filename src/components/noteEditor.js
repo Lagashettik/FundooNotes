@@ -5,7 +5,7 @@ import DataServices from '../../services/dataServices';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import RBSheetComponent from './RBSheetComponent'
 
-export default class Notes extends Component {
+export default class NoteEditor extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -70,17 +70,16 @@ export default class Notes extends Component {
         note: this.state.title
     }) === JSON.stringify(this.props.route.params.note)
 
-    backAction = async () => {
-        await this.createOrUpdateNote()
-        this.props.navigation.push('home-page')
-        return true;
-    };
-
     componentDidMount() {
         if (this.props.route.params.note != undefined) {
             this.setState({
                 title: this.props.route.params.note.title,
                 note: this.props.route.params.note.note
+            })
+        } else {
+            this.setState({
+                title : '',
+                note : ''
             })
         }
 
@@ -94,12 +93,6 @@ export default class Notes extends Component {
     }
 
     componentWillUnmount() {
-        if (this.props.route.params != undefined)
-            if (this.props.route.params.note != undefined)
-                this.setState({
-                    title: '',
-                    note: ''
-                })
 
         this.backHandler.remove();
     }

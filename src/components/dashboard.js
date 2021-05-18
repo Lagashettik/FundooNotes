@@ -24,7 +24,7 @@ export default class Dashboard extends Component {
     }
 
     goToNotes = () => {
-        this.props.navigation.push('notes', { note: undefined, key: undefined })
+        this.props.navigation.push('note-editor', { note: undefined, key: undefined })
     }
 
     componentDidMount() {

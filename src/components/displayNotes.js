@@ -7,28 +7,30 @@ export default class DisplayNotes extends Component {
       super(props)
       this.state = {
          showGrid: false,
-         keys: []
+         keys: [],
+         disableTouch : false
       }
    }
 
    static getDerivedStateFromProps(props, state) {
-      if (props.showGrid != undefined)
+      if (props.disableTouch != undefined)
          return {
+            disableTouch : props.disableTouch,
             showGrid: props.showGrid()
          }
-      else return {showGrid : false}
+      else return {showGrid: props.showGrid()}
    }
 
    editNote = (noteKey) => {
       console.log("Note : " + JSON.stringify(this.props.notes[noteKey]) + " Key : " + noteKey)
-      this.props.navigation.push('notes', { note: this.props.notes[noteKey], key: noteKey })
+      this.props.navigation.push('note-editor', { note: this.props.notes[noteKey], key: noteKey })
    }
 
    filterNotes = (isArchive, isDeleted) => {
       if (this.props.filterNotes == undefined)
          return isArchive != true && isDeleted != true
-      else if (this.props.filterNotes == 'archive')
-         return isArchive == true
+      else if (this.props.filterNotes == 'archive' )
+         return isArchive == true && isDeleted != true
       else if (this.props.filterNotes == 'deleted')
          return isDeleted == true
       else console.log(this.props)
@@ -44,7 +46,7 @@ export default class DisplayNotes extends Component {
                   if (this.filterNotes(this.props.notes[key].isArchive, this.props.notes[key].isDeleted))
                      return (
                         < Card key={key}
-                           onPress={() => this.editNote(key)}
+                           onPress={() => this.state.disableTouch ? null :this.editNote(key)}
                            style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%', backgroundColor: 'white' }}>
                            <Card.Title title={this.props.notes[key].title} subtitle={this.props.notes[key].note} />
                         </Card>
