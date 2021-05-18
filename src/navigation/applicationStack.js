@@ -9,7 +9,6 @@ import Dashboard from '../components/dashboard';
 import Notes from '../components/notes';
 import MenuDrawer from './menuDrawer';
 import DisplayNotes from '../components/displayNotes';
-import NoteBottomSheet from '../components/noteBottomSheet';
 import SplashScreen from '../components/splashScreen';
 
 const Stack = createStackNavigator();
@@ -17,7 +16,7 @@ const Stack = createStackNavigator();
 ApplicationStack = () => {
     return (
         <NavigationContainer >
-            <Stack.Navigator initialRouteName="home-page" headerMode='none'>
+            <Stack.Navigator initialRouteName="splash-screen" headerMode='none'>
                 <Stack.Screen name="splash-screen" component={SplashScreen}/>
                 <Stack.Screen name="login" component={Login} />
                 <Stack.Screen name="registration" component={Registration} />
@@ -27,7 +26,6 @@ ApplicationStack = () => {
                 <Stack.Screen name="notes" component={Notes} />
                 <Stack.Screen name="display-note" component={DisplayNotes} />
                 <Stack.Screen name="home-page" component={MenuDrawer} />
-                <Stack.Screen name="note-bottom-sheet" component={NoteBottomSheet} />
             </Stack.Navigator>
         </NavigationContainer>
     )

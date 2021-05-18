@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, BackHandler, Button } from 'react-native';
 import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
-import NoteBottomSheet from './noteBottomSheet'
 import DataServices from '../../services/dataServices';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import RBSheetComponent from './RBSheetComponent'
 
 export default class Notes extends Component {
     constructor(props) {
@@ -11,7 +11,7 @@ export default class Notes extends Component {
         this.state = {
             note: "",
             title: "",
-            noteBottomSheetShow: ''
+            selectedIcon: ''
         }
     }
 
@@ -112,6 +112,25 @@ export default class Notes extends Component {
         this.backHandler.remove();
     }
 
+    handlePlusIconButton = () => {
+        this.setState({
+            selectedIcon: 'plus'
+        })
+        this.RBSheet.open()
+    }
+
+    handleDotsIconButton = () => {
+        this.setState({
+            selectedIcon: 'dots'
+        })
+        this.RBSheet.open()
+    }
+
+    archiveNote = () => {
+        if(this.props.route.params.key != undefined)
+        new DataServices().archiveNote(this.props.route.params.key)
+    }
+
     render() {
         return (
             <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor: 'white' }}>
@@ -125,42 +144,69 @@ export default class Notes extends Component {
                         <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
                             <IconButton icon="pin-outline" color='red' />
                             <IconButton icon="bell-plus-outline" color='red' />
-                            <IconButton icon={require('../assets/archive.png')} color='red' />
+                            <IconButton icon={require('../assets/archive.png')} color='red' onPress={this.archiveNote} />
                         </View>
                     </Appbar>
-                    <TextInput placeholder="Title"
-                        style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
-                        placeholderTextColor='gray' mode='flat'
-                        theme={{
-                            colors: {
-                                primary: 'red',
-                                text: 'black'
-                            }
-                        }}
-                        value={this.state.title}
-                        onChangeText={this.handleTitle} />
-                    <TextInput placeholder="Note" style={{ backgroundColor: 'white' }}
-                        multiline={true} mode='flat'
-                        theme={{
-                            colors: {
-                                primary: 'red'
-                            }
-                        }}
-                        value={this.state.note}
-                        onChangeText={this.handleNote} />
+                    <View>
+                        <TextInput placeholder="Title"
+                            style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
+                            placeholderTextColor='gray' mode='flat'
+                            theme={{
+                                colors: {
+                                    primary: 'red',
+                                    text: 'black'
+                                }
+                            }}
+                            value={this.state.title}
+                            onChangeText={this.handleTitle} />
+                        <TextInput placeholder="Note" style={{ backgroundColor: 'white' }}
+                            multiline={true} mode='flat'
+                            theme={{
+                                colors: {
+                                    primary: 'transparent'
+                                }
+                            }}
+                            value={this.state.note}
+                            onChangeText={this.handleNote} />
+                    </View>
                 </View>
                 <Appbar theme={{ colors: { primary: 'white' } }} style={{ height: '7%' }}>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
-                        <IconButton icon="plus-box-outline" color='red' onPress={() => this.setState({
-                            noteBottomSheetShow: 'plus'
-                        })} />
-                        <IconButton icon="dots-vertical" color='red' onPress={() => this.setState({
-                            noteBottomSheetShow: 'dots'
-                        })} />
-                        {
-                            this.state.noteBottomSheetShow == 'plus' ? <NoteBottomSheet open='plus' />
-                                : this.state.noteBottomSheetShow == 'dots' ? <NoteBottomSheet open='dots' /> : null
-                        }
+                        <IconButton icon="plus-box-outline" color='red' onPress={this.handlePlusIconButton} />
+                        <IconButton icon="dots-vertical" color='red' onPress={this.handleDotsIconButton} />
+
+                        <RBSheet
+                            ref={ref => {
+                                this.RBSheet = ref;
+                            }}
+                            height={300}
+                            openDuration={250}
+                            customStyles={{
+                                container: {
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }
+                            }}
+                        >{
+                                this.state.selectedIcon == 'plus' ?
+                                    <RBSheetComponent
+                                        selectedIcon={this.state.selectedIcon}
+                                        camera="camera" cameraLabel="Take photo"
+                                        imageOutline="image-outline" imageOutlineLabel="Add image"
+                                        brush="brush" brushLabel="Drawing"
+                                        mic="microphone-outline" micLabel="Recording"
+                                        box="check-box-outline" boxLabel="Tick boxes"
+                                    /> :
+                                    <RBSheetComponent
+                                        selectedIcon={this.state.selectedIcon}
+                                        deleteOutline="delete-outline" deleteOutlineLabel="Delete"
+                                        contentCopy="content-copy" contentCopyLabel="Make a copy"
+                                        shareVariant="share-variant" shareVariantLabel="Send"
+                                        accountPlusOutline="account-plus-outline" accountPlusOutlineLabel="Collaborator"
+                                        labelOutline="label-outline" labelOutlineLabel="Labels"
+                                    />
+                            }
+                        </RBSheet>
                     </View>
                 </Appbar>
             </View>

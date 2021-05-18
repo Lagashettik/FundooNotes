@@ -42,6 +42,20 @@ class DataServices {
         })
     }
 
+    trashNote = (key) =>{
+        
+    }
+
+    archiveNote = async (key) =>{
+        console.log(key)
+        archive = {
+            isArchive : true
+        }
+        uid = await this.getUIdFromStorage()
+        firebase.database().ref('/notes/' + uid).child(key).update(archive)
+        
+    }
+
     removeNotesFromDatabase = (key) => {
         firebase.database().ref('/notes/' + uid).child(key).remove()
     }
@@ -92,6 +106,7 @@ class DataServices {
             console.log("Async storage remove error : " + error)
         }
     }
+
 }
 
 export default DataServices;

@@ -37,7 +37,7 @@ export default class Dashboard extends Component {
         new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
             .catch(error => console.log(error))
 
-        this.backHandler = BackHandler.addEventListener("hardwareBackPress", ()=>BackHandler.exitApp())
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => BackHandler.exitApp())
     }
 
     componentWillUnmount() {
