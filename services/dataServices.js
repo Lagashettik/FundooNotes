@@ -32,7 +32,7 @@ class DataServices {
     }
 
     updateNotesToDatabase = (note, key) => {
-        console.log("noteup : " + note + " keyup" + key)
+        console.log("noteup : " + JSON.stringify(note) + " keyup" + key)
         return new Promise((resolve, reject) => {
             firebase.database().ref('/notes/' + uid).child(key)
                 .update(note)
@@ -42,10 +42,10 @@ class DataServices {
         })
     }
 
-    deleteNote = async (key) => {
+    deleteOrRestoreNote = async (key,deletes=true) => {
         console.log(key)
         deleted = {
-            isDeleted: true
+            isDeleted: deletes
         }
         uid = await this.getUIdFromStorage()
         firebase.database().ref('/notes/' + uid).child(key).update(deleted)

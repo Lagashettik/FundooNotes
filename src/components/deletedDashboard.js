@@ -31,7 +31,7 @@ export default class DeletedDashboard extends Component {
                 </View>
 
                 <DisplayNotes filterNotes='deleted' navigation={this.props.navigation}
-                    notes={this.state.notes} disableTouch={true} showGrid={() => false} />
+                    notes={this.state.notes} showGrid={() => false} />
             </View>
         )
     }

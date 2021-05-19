@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, BackHandler, Button } from 'react-native';
+import { View, BackHandler } from 'react-native';
 import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
 import DataServices from '../../services/dataServices';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -11,7 +11,8 @@ export default class NoteEditor extends Component {
         this.state = {
             note: "",
             title: "",
-            selectedIcon: ''
+            selectedIcon: '',
+            disableTouch: false
         }
     }
 
@@ -28,9 +29,13 @@ export default class NoteEditor extends Component {
     }
 
     backActionOrGoToDashboard = async () => {
-        await this.createOrUpdateNote()
-        this.props.navigation.push('home-page')
+        if (!this.state.disableTouch) {
+            await this.createOrUpdateNote()
+            this.props.navigation.push('home-page')
+        } else this.props.navigation.navigate('Deleted')
+
         return true
+
     }
 
     createOrUpdateNote = async () => {
@@ -78,12 +83,16 @@ export default class NoteEditor extends Component {
             })
         } else {
             this.setState({
-                title : '',
-                note : ''
+                title: '',
+                note: ''
             })
         }
 
-        console.log("params " + JSON.stringify(this.props.route.params.note))
+        if (this.props.route.params.disableTouch != undefined)
+            this.setState({
+                disableTouch: this.props.route.params.disableTouch
+            })
+
 
         this.backHandler = BackHandler.addEventListener(
             "hardwareBackPress",
@@ -98,10 +107,12 @@ export default class NoteEditor extends Component {
     }
 
     handlePlusIconButton = () => {
-        this.setState({
-            selectedIcon: 'plus'
-        })
-        this.RBSheet.open()
+        if (!this.state.disableTouch) {
+            this.setState({
+                selectedIcon: 'plus'
+            })
+            this.RBSheet.open()
+        }
     }
 
     handleDotsIconButton = () => {
@@ -112,7 +123,7 @@ export default class NoteEditor extends Component {
     }
 
     archiveNote = () => {
-        if (this.props.route.params.key != undefined)
+        if (this.props.route.params.key != undefined && !this.state.disableTouch)
             new DataServices().archiveNote(this.props.route.params.key)
     }
 
@@ -126,29 +137,33 @@ export default class NoteEditor extends Component {
                         <View style={{ width: '50%' }}>
                             <IconButton icon="keyboard-backspace" color='red' onPress={this.backActionOrGoToDashboard} />
                         </View>
-                        <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
-                            <IconButton icon="pin-outline" color='red' />
-                            <IconButton icon="bell-plus-outline" color='red' />
-                            <IconButton icon={require('../assets/archive.png')} color='red' onPress={this.archiveNote} />
-                        </View>
+                        {
+                            !this.state.disableTouch &&
+                            <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
+                                <IconButton icon="pin-outline" color='red' />
+                                <IconButton icon="bell-plus-outline" color='red' />
+                                <IconButton icon={require('../assets/archive.png')} color='red' onPress={this.archiveNote} />
+                            </View>
+                        }
                     </Appbar>
                     <View>
                         <TextInput placeholder="Title"
                             style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
-                            placeholderTextColor='gray' mode='flat'
+                            placeholderTextColor='gray' mode='flat' selectionColor='red'
+                            underlineColor='white' disabled={this.state.disableTouch}
                             theme={{
                                 colors: {
-                                    primary: 'red',
-                                    text: 'black'
+                                    primary: 'white'
                                 }
                             }}
                             value={this.state.title}
                             onChangeText={this.handleTitle} />
                         <TextInput placeholder="Note" style={{ backgroundColor: 'white' }}
-                            multiline={true} mode='flat'
+                            multiline={true} mode='flat' selectionColor='red'
+                            underlineColor='white' disabled={this.state.disableTouch}
                             theme={{
                                 colors: {
-                                    primary: 'transparent'
+                                    primary: 'white'
                                 }
                             }}
                             value={this.state.note}
@@ -164,12 +179,12 @@ export default class NoteEditor extends Component {
                             ref={ref => {
                                 this.RBSheet = ref;
                             }}
-                            height={300}
+                            height={this.state.disableTouch ? 100 : 300}
                             openDuration={250}
                             customStyles={{
                                 container: {
                                     justifyContent: "center",
-                                    alignItems: "center",
+                                    alignContent: "center",
                                     marginBottom: 60
                                 }
                             }}
@@ -183,7 +198,7 @@ export default class NoteEditor extends Component {
                                         mic="microphone-outline" micLabel="Recording"
                                         box="check-box-outline" boxLabel="Tick boxes"
                                         noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
-                                        navigation={this.props.navigation}
+                                        navigation={this.props.navigation} disableTouch={this.state.disableTouch}
                                     /> :
                                     <RBSheetComponent
                                         selectedIcon={this.state.selectedIcon}
@@ -193,7 +208,7 @@ export default class NoteEditor extends Component {
                                         accountPlusOutline="account-plus-outline" accountPlusOutlineLabel="Collaborator"
                                         labelOutline="label-outline" labelOutlineLabel="Labels"
                                         noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
-                                        navigation={this.props.navigation}
+                                        navigation={this.props.navigation} disableTouch={this.state.disableTouch}
                                     />
                             }
                         </RBSheet>
