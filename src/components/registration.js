@@ -7,6 +7,7 @@ import { globalStylesheet } from '../styles/global.styles'
 import { registrationStyleSheet } from '../styles/registration.styles'
 import { globalColorConstant, globalFontConstant, globalThemeConstant } from "../styles/globalStyleData.styles"
 import UserServices from "../../services/userServices"
+import StringsOfLanguages from "../localization/stringsOfLanguages"
 
 export default class Registration extends Component {
     constructor(props) {
@@ -179,13 +180,13 @@ export default class Registration extends Component {
     render() {
         return (
             <View style={globalStylesheet.parent_conatiner_view} >
-                <Text style={registrationStyleSheet.header}>Create Account,</Text>
-                <Text style={globalStylesheet.primary_Text}>Sign up to get started!</Text>
+                <Text style={registrationStyleSheet.header}>{StringsOfLanguages.createAccount}</Text>
+                <Text style={globalStylesheet.primary_Text}>{StringsOfLanguages.signUpMessage}</Text>
                 <View style={registrationStyleSheet.name_container}>
                     <TextInput
                         style={registrationStyleSheet.name_input}
                         mode='outlined'
-                        label='Firstname'
+                        label={StringsOfLanguages.firstName}
                         value={this.state.firstName}
                         onChangeText={this.handleFirstName}
                         theme={globalThemeConstant.textInputTheme} />
@@ -193,7 +194,7 @@ export default class Registration extends Component {
                     <TextInput
                         style={registrationStyleSheet.name_input}
                         mode='outlined'
-                        label='Lastname'
+                        label={StringsOfLanguages.lastName}
                         value={this.state.lastName}
                         onChangeText={this.handleLastName}
                         theme={globalThemeConstant.textInputTheme} />
@@ -206,7 +207,7 @@ export default class Registration extends Component {
                 <View style={{ alignContent: 'center', flexDirection: 'column' }}>
 
                     <TouchableOpacity onPress={this.openDatePicker}>
-                        <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>Select Date : {this.state.dateOfBirth}</Text>
+                        <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>{StringsOfLanguages.selectDOB} {this.state.dateOfBirth}</Text>
                     </TouchableOpacity>
                     {
                         this.state.datePickerVisibility &&
@@ -228,7 +229,7 @@ export default class Registration extends Component {
                 <TextInput
                     style={{ margin: '1%' }}
                     mode='outlined'
-                    label='Email'
+                    label={StringsOfLanguages.email}
                     value={this.state.email}
                     onChangeText={this.handleEmail}
                     theme={globalThemeConstant.textInputTheme} />
@@ -236,7 +237,7 @@ export default class Registration extends Component {
                 <TextInput
                     style={{ margin: '1%' }}
                     mode='outlined'
-                    label='Password'
+                    label={StringsOfLanguages.password}
                     value={this.state.password}
                     onChangeText={this.handlePassword}
                     secureTextEntry={this.state.secure}
@@ -246,7 +247,7 @@ export default class Registration extends Component {
                 <TextInput
                     style={{ margin: '1%' }}
                     mode='outlined'
-                    label='Confirm Password'
+                    label={StringsOfLanguages.confirmPassword}
                     value={this.state.confirmPassword}
                     onChangeText={this.handleConfirmPassword}
                     secureTextEntry={this.state.secure}
@@ -258,19 +259,19 @@ export default class Registration extends Component {
                         onPress={this.setChecked}
                         uncheckedColor='red'
                     />
-                    <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>Show Password</Text>
+                    <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>{StringsOfLanguages.showPassword}</Text>
                 </View>
 
                 <Button mode='contained'
                     style={registrationStyleSheet.button_SignUp}
                     labelStyle={{ fontSize: 20 }}
                     onPress={this.userRegister}
-                    theme={globalThemeConstant.textInputTheme}>Sign up</Button>
+                    theme={globalThemeConstant.textInputTheme}>{StringsOfLanguages.signUp}</Button>
 
                 <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems: 'flex-end' }}>
-                    <Text>I already have account,</Text>
+                    <Text>{StringsOfLanguages.alreadyHaveAccount}</Text>
                     <TouchableOpacity onPress={this.goToLogin}>
-                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Sign In</Text>
+                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}>{StringsOfLanguages.signInTag}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

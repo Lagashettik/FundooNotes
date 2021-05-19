@@ -3,6 +3,7 @@ import { BackHandler, View } from 'react-native';
 import { Appbar, Searchbar, IconButton, FAB } from 'react-native-paper';
 import DataServices from '../../services/dataServices';
 import UserServices from '../../services/userServices';
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 import DisplayNotes from './displayNotes';
 
 export default class Dashboard extends Component {
@@ -49,7 +50,7 @@ export default class Dashboard extends Component {
                     }}>
                         <View style={{ flexDirection: 'row' }}>
                             <Appbar.Action icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
-                            <Searchbar style={{ width: '60%', height: 40, alignSelf: 'center' }} placeholder='Search notes' />
+                            <Searchbar style={{ width: '60%', height: 45, alignSelf: 'center' }} placeholder={StringsOfLanguages.searchNote}  />
                             <Appbar.Action icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"}
                                 size={30}
                                 color='white'

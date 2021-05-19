@@ -6,6 +6,7 @@ import { loginStylesheet } from '../styles/login.styles'
 import { globalColorConstant, globalThemeConstant } from '../styles/globalStyleData.styles'
 import UserServices from '../../services/userServices';
 import SocialServices from '../../services/socialServices'
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 
 export default class Login extends Component {
     constructor(props) {
@@ -16,7 +17,6 @@ export default class Login extends Component {
             errorEmail: '',
             errorPassword: '',
             error: '',
-            user_name: '',
             avatar_url: '',
             avatar_show: false
         }
@@ -50,7 +50,7 @@ export default class Login extends Component {
                 })
                 .catch(error => {
                     this.setState({
-                        error : error
+                        error: error
                     })
                     console.log(error)
                 })
@@ -123,12 +123,12 @@ export default class Login extends Component {
         return (
             <View style={globalStylesheet.parent_conatiner_view}>
                 <View style={loginStylesheet.sub_container_view}>
-                    <Text style={globalStylesheet.header}>Welcome,</Text>
-                    <Text style={globalStylesheet.primary_Text}>Sign in to continue!</Text>
+                    <Text style={globalStylesheet.header}>{StringsOfLanguages.welcome}</Text>
+                    <Text style={globalStylesheet.primary_Text}>{StringsOfLanguages.signInMessage}</Text>
                     <TextInput
                         style={loginStylesheet.text_input}
                         mode='outlined'
-                        label='Email'
+                        label={StringsOfLanguages.email}
                         value={this.state.email}
                         onChangeText={this.handleEmail}
                         selectionColor={globalColorConstant.SELECTORCOLOR}
@@ -139,7 +139,7 @@ export default class Login extends Component {
                     <TextInput
                         style={loginStylesheet.text_input}
                         mode='outlined'
-                        label='Password'
+                        label={StringsOfLanguages.password}
                         value={this.state.password}
                         onChangeText={this.handlePassword}
                         selectionColor={globalColorConstant.SELECTORCOLOR}
@@ -149,7 +149,7 @@ export default class Login extends Component {
                     <Text style={globalStylesheet.text_Error}>{this.state.errorPassword}</Text>
 
                     <TouchableOpacity onPress={this.goToForgetPassword}>
-                        <Text style={loginStylesheet.forgot_password}>Forgot Password?</Text>
+                        <Text style={loginStylesheet.forgot_password}>{StringsOfLanguages.forgotPassword}</Text>
                     </TouchableOpacity>
 
                     <Button
@@ -157,35 +157,39 @@ export default class Login extends Component {
                         style={loginStylesheet.button_SignIn}
                         labelStyle={{ fontSize: 20 }}
                         onPress={this.userLogin}
-                    > Sign In</Button>
+                    >{StringsOfLanguages.signIn}</Button>
 
-                    <Text style={{ color: 'blue', alignSelf: 'center', marginTop: '10%' }}>
-                        -------------------------------------or--------------------------------------
-                    </Text>
+                    <View style={{ width: '100%', justifyContent: 'center', marginTop: '10%', flexDirection: 'row' }}>
+                        <View style={{ borderBottomWidth: 1, borderColor: 'blue', width: '48%' }} />
+                        <Text style={{ color: 'blue', marginBottom : '-2%' }}>{StringsOfLanguages.or}</Text>
+                        <View style={{ borderBottomWidth: 1, borderColor: 'blue', width: '48%' }} />
+                    </View>
+
+                    {/* <Text style={{ color: 'blue', alignSelf: 'center', marginTop: '10%' }}>
+                        -------------------------------------{StringsOfLanguages.or}--------------------------------------
+                    </Text> */}
 
                     <Button
                         mode='contained'
                         icon='facebook'
                         style={loginStylesheet.button_Facebook_SignIn}
                         onPress={this.facebookLogin}
-                    > Connect with Facebook</Button>
-
-                    <Text > {this.state.user_name} </Text>
+                    >{StringsOfLanguages.connectFacebook}</Button>
 
                     <Button
                         mode='contained'
                         icon='google'
                         style={loginStylesheet.button_Google_SignIn}
                         onPress={this.googleLogin}
-                    > Connect with Google</Button>
+                    >{StringsOfLanguages.connectGoogle}</Button>
 
                     <Text style={globalStylesheet.text_Error}>{this.state.error}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end', height: '30%' }}>
-                    <Text >I'm a new user,</Text>
+                    <Text >{StringsOfLanguages.newUser}</Text>
                     <TouchableOpacity onPress={this.goToSignUp}>
                         <Text
-                            style={{ fontWeight: 'bold', color: 'red' }}> Sign Up</Text>
+                            style={{ fontWeight: 'bold', color: 'red' }}>{StringsOfLanguages.signUpTag}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

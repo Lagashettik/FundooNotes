@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import DisplayNotes from './displayNotes';
 import DataServices from '../../services/dataServices';
 import { Appbar, Text } from 'react-native-paper';
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 
 export default class DeletedDashboard extends Component {
     constructor() {
@@ -26,7 +27,7 @@ export default class DeletedDashboard extends Component {
                         style={{ width: '100%', flexDirection: 'row' }}
                         theme={{ colors: { primary: 'red' } }}>
                         <Appbar.Action icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
-                        <Text style={{ fontSize: 30, color: 'white' }}>Deleted</Text>
+                        <Text style={{ fontSize: 30, color: 'white' }}>{StringsOfLanguages.deleted}</Text>
                     </Appbar>
                 </View>
 

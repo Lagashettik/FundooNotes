@@ -4,6 +4,7 @@ import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
 import DataServices from '../../services/dataServices';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import RBSheetComponent from './RBSheetComponent'
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 
 export default class NoteEditor extends Component {
     constructor(props) {
@@ -147,7 +148,7 @@ export default class NoteEditor extends Component {
                         }
                     </Appbar>
                     <View>
-                        <TextInput placeholder="Title"
+                        <TextInput placeholder={StringsOfLanguages.title}
                             style={{ backgroundColor: 'white', fontSize: 30, fontWeight: 'bold' }}
                             placeholderTextColor='gray' mode='flat' selectionColor='red'
                             underlineColor='white' disabled={this.state.disableTouch}
@@ -158,7 +159,7 @@ export default class NoteEditor extends Component {
                             }}
                             value={this.state.title}
                             onChangeText={this.handleTitle} />
-                        <TextInput placeholder="Note" style={{ backgroundColor: 'white' }}
+                        <TextInput placeholder={StringsOfLanguages.note} style={{ backgroundColor: 'white' }}
                             multiline={true} mode='flat' selectionColor='red'
                             underlineColor='white' disabled={this.state.disableTouch}
                             theme={{
@@ -192,21 +193,21 @@ export default class NoteEditor extends Component {
                                 this.state.selectedIcon == 'plus' ?
                                     <RBSheetComponent
                                         selectedIcon={this.state.selectedIcon}
-                                        camera="camera" cameraLabel="Take photo"
-                                        imageOutline="image-outline" imageOutlineLabel="Add image"
-                                        brush="brush" brushLabel="Drawing"
-                                        mic="microphone-outline" micLabel="Recording"
-                                        box="check-box-outline" boxLabel="Tick boxes"
+                                        camera="camera" cameraLabel={StringsOfLanguages.takePhoto}
+                                        imageOutline="image-outline" imageOutlineLabel={StringsOfLanguages.addImage}
+                                        brush="brush" brushLabel={StringsOfLanguages.drawing}
+                                        mic="microphone-outline" micLabel={StringsOfLanguages.recording}
+                                        box="check-box-outline" boxLabel={StringsOfLanguages.tickBoxes}
                                         noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
                                         navigation={this.props.navigation} disableTouch={this.state.disableTouch}
                                     /> :
                                     <RBSheetComponent
                                         selectedIcon={this.state.selectedIcon}
-                                        deleteOutline="delete-outline" deleteOutlineLabel="Delete"
-                                        contentCopy="content-copy" contentCopyLabel="Make a copy"
-                                        shareVariant="share-variant" shareVariantLabel="Send"
-                                        accountPlusOutline="account-plus-outline" accountPlusOutlineLabel="Collaborator"
-                                        labelOutline="label-outline" labelOutlineLabel="Labels"
+                                        deleteOutline="delete-outline" deleteOutlineLabel={StringsOfLanguages.delete}
+                                        contentCopy="content-copy" contentCopyLabel={StringsOfLanguages.makeCopy}
+                                        shareVariant="share-variant" shareVariantLabel={StringsOfLanguages.send}
+                                        accountPlusOutline="account-plus-outline" accountPlusOutlineLabel={StringsOfLanguages.collaborator}
+                                        labelOutline="label-outline" labelOutlineLabel={StringsOfLanguages.labels}
                                         noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
                                         navigation={this.props.navigation} disableTouch={this.state.disableTouch}
                                     />

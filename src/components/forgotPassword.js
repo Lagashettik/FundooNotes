@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Button, Checkbox, TextInput, Snackbar } from 'react-native-paper';
+import { Button, TextInput, Snackbar } from 'react-native-paper';
 import { globalStylesheet } from '../styles/global.styles';
-import firebase from '../../database/firebase';
 import { globalThemeConstant } from '../styles/globalStyleData.styles';
 import { forgotPasswordStyleSheet } from '../styles/forgotPassword.styles';
 import UserServices from '../../services/userServices';
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 
 export default class ForgotPassword extends Component {
     constructor() {
@@ -75,16 +75,15 @@ export default class ForgotPassword extends Component {
                 height: '90%',
                 margin: '10%'
             }}>
-                <Text style={globalStylesheet.header}>Forgot Your Password,</Text>
-                <Text style={{ fontSize: 20, color: 'gray' }}>Don't worry!</Text>
+                <Text style={globalStylesheet.header}>{StringsOfLanguages.forgotYourPassword}</Text>
+                <Text style={{ fontSize: 20, color: 'gray' }}>{StringsOfLanguages.dontWorry}</Text>
                 <Text style={{ fontSize: 15, color: 'gray', marginBottom: '10%' }}>
-                    Enter  your email and click on reset you get password reset instructions on your email
-                </Text>
+                    {StringsOfLanguages.forgotPasswordDescription}</Text>
 
                 <TextInput
                     style={globalStylesheet.text_input}
                     mode='outlined'
-                    label='Email'
+                    label={StringsOfLanguages.email}
                     value={this.state.email}
                     onChangeText={this.handleEmail}
                     theme={globalThemeConstant.textInputTheme}
@@ -99,7 +98,7 @@ export default class ForgotPassword extends Component {
                     }}
                     labelStyle={{ fontSize: 20 }}
                     onPress={this.resetPassword}
-                >Reset</Button>
+                >{StringsOfLanguages.reset}</Button>
                 <Snackbar
                     visible={this.state.showSnackbar}
                     action={{
@@ -111,9 +110,9 @@ export default class ForgotPassword extends Component {
                 >{this.state.snackbarMessage}</Snackbar>
 
                 <View style={{ height: '10%', justifyContent: 'center', flexDirection: 'row', alignItems: 'flex-end' }}>
-                    <Text>I already have account,</Text>
+                    <Text>{StringsOfLanguages.alreadyHaveAccount}</Text>
                     <TouchableOpacity onPress={this.goToLogin}>
-                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}> Sign In</Text>
+                        <Text style={{ alignSelf: 'center', color: 'red', fontWeight: 'bold' }}>{StringsOfLanguages.signInTag}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

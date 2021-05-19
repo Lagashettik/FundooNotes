@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Image, View, Text } from 'react-native';
 import UserServices from '../../services/userServices';
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 
 export default class SplashScreen extends Component {
 
@@ -22,7 +23,7 @@ export default class SplashScreen extends Component {
             <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                 <Image source={require('../assets/note_icon.png')} style={{ height: '25%', width: '40%' }}
                     resizeMode='contain' />
-                <Text style={{ fontSize: 40 }}>Fundoo Notes</Text>
+                <Text style={{ fontSize: 40 }}>{StringsOfLanguages.appName}</Text>
 
             </View>
         )

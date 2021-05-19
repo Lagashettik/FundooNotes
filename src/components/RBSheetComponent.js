@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper'
 import DataServices from '../../services/dataServices';
+import StringsOfLanguages from '../localization/stringsOfLanguages';
 
 const RBSheetComponent = (props) => {
     console.log(props)
@@ -83,7 +84,7 @@ const RBSheetComponent = (props) => {
                     }}
                         icon="restore"
                         onPress={restoreNote}
-                    >Restore</Button>
+                    >{StringsOfLanguages.restore}</Button>
                     <Button mode='text' theme={{
                         colors: {
                             primary: 'red'
@@ -91,7 +92,7 @@ const RBSheetComponent = (props) => {
                     }}
                         icon="delete-forever-outline"
                         onPress={deleteOrDeleteForeverNote}
-                    >Delete forever</Button>
+                    >{StringsOfLanguages.deleteforever}</Button>
                 </View>
         }
         </View>
