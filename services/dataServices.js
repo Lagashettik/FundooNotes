@@ -3,20 +3,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class DataServices {
 
-    saveNotesToDatabase = async (note) => {
-        let uid = ''
-        console.log("Note" + JSON.stringify(note))
-        await this.getUIdFromStorage().then(value => uid = value)
-        await firebase.database()
-            .ref('notes/' + uid)
-            .push(note)
-
+    saveNotesToDatabase = (note) => {
+        this.getUIdFromStorage().then(uid => {
+            firebase.database()
+                .ref('notes/' + uid)
+                .push(note)
+        })
+            .catch(error => console.log(error.message))
     }
 
     getNotesFromDatabase = async () => {
         uid = await this.getUIdFromStorage()
-        data = {}
-
         return new Promise((resolve, reject) => {
             firebase.database()
                 .ref('notes/' + uid)
@@ -27,8 +24,6 @@ class DataServices {
                 })
                 .catch(error => reject(error))
         })
-
-
     }
 
     updateNotesToDatabase = (note, key) => {
@@ -42,7 +37,7 @@ class DataServices {
         })
     }
 
-    deleteOrRestoreNote = async (key,deletes=true) => {
+    deleteOrRestoreNote = async (key, deletes = true) => {
         console.log(key)
         deleted = {
             isDeleted: deletes

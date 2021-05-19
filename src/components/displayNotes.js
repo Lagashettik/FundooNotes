@@ -23,18 +23,27 @@ export default class DisplayNotes extends Component {
       if (this.props.filterNotes != 'deleted')
          this.props.navigation.push('note-editor', { note: this.props.notes[noteKey], key: noteKey })
       else
-         this.props.navigation.push('note-editor', { note: this.props.notes[noteKey], key: noteKey, disableTouch : true })
+         this.props.navigation.push('note-editor', { note: this.props.notes[noteKey], key: noteKey, disableTouch: true })
    }
 
-   filterNotes = (isArchive, isDeleted) => {
+   filterNotes = (isArchive, isDeleted, key) => {
       console.log(isArchive, isDeleted)
-      if (this.props.filterNotes == undefined)
-         return isArchive != true && isDeleted != true
+      if (this.props.filterNotes == undefined) {
+         if (this.props.searchWord() == null)
+            return isArchive != true && isDeleted != true
+         else
+            return ((this.props.notes[key].title).includes(this.props.searchWord()) || (this.props.notes[key].note).includes(this.props.searchWord()))
+               && (isArchive != true && isDeleted != true)
+      }
       else if (this.props.filterNotes == 'archive')
          return isArchive == true && isDeleted != true
       else if (this.props.filterNotes == 'deleted')
          return isDeleted == true
       else console.log(this.props)
+   }
+
+   componentDidMount() {
+
    }
 
    render() {
@@ -43,10 +52,11 @@ export default class DisplayNotes extends Component {
             contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }}
             style={{ height: '90%' }}>
             {
+               this.props.notes != undefined &&
                Object.getOwnPropertyNames(this.props.notes).map((key, index) => {
-                  if (this.filterNotes(this.props.notes[key].isArchive, this.props.notes[key].isDeleted))
+                  if (this.filterNotes(this.props.notes[key].isArchive, this.props.notes[key].isDeleted, key))
                      return (
-                        < Card key={key}
+                        <Card key={key}
                            onPress={() => this.editNote(key)}
                            style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%', backgroundColor: 'white' }}>
                            <Card.Title title={this.props.notes[key].title} subtitle={this.props.notes[key].note} />

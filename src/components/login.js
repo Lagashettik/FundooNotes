@@ -165,10 +165,6 @@ export default class Login extends Component {
                         <View style={{ borderBottomWidth: 1, borderColor: 'blue', width: '48%' }} />
                     </View>
 
-                    {/* <Text style={{ color: 'blue', alignSelf: 'center', marginTop: '10%' }}>
-                        -------------------------------------{StringsOfLanguages.or}--------------------------------------
-                    </Text> */}
-
                     <Button
                         mode='contained'
                         icon='facebook'

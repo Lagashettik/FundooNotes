@@ -11,21 +11,31 @@ export default class Dashboard extends Component {
         super()
         this.state = {
             showGrid: false,
-            notes: {}
+            notes: {},
+            searchNote: '',
+            searchOn: false
         }
     }
 
-    logout = async () => {
-        let userServices = new UserServices()
-        let value = await userServices.userLogout()
-        if (value == '')
-            this.props.navigation.replace('login')
-        else
-            console.log(value)
+    logout = () => {
+        new UserServices().userLogout()
+            .then(() => this.props.navigation.replace('login'))
+            .catch(error => console.log(error))
     }
 
     goToNotes = () => {
         this.props.navigation.push('note-editor', { note: undefined, key: undefined })
+    }
+
+    handleSearchBar = (searchWord) => {
+        this.setState({
+            searchNote: searchWord,
+            searchOn: true
+        })
+        if (this.state.searchNote == '')
+            this.setState({
+                searchOn: false
+            })
     }
 
     componentDidMount() {
@@ -50,7 +60,8 @@ export default class Dashboard extends Component {
                     }}>
                         <View style={{ flexDirection: 'row' }}>
                             <Appbar.Action icon="view-headline" size={30} color='white' onPress={() => this.props.navigation.toggleDrawer()} />
-                            <Searchbar style={{ width: '60%', height: 45, alignSelf: 'center' }} placeholder={StringsOfLanguages.searchNote}  />
+                            <Searchbar style={{ width: '60%', height: 45, alignSelf: 'center' }} placeholder={StringsOfLanguages.searchNote}
+                                onChangeText={this.handleSearchBar} />
                             <Appbar.Action icon={this.state.showGrid ? "view-grid-outline" : "view-agenda-outline"}
                                 size={30}
                                 color='white'
@@ -59,7 +70,8 @@ export default class Dashboard extends Component {
                         </View>
                     </Appbar>
 
-                    <DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation} notes={this.state.notes} filterNotes={undefined} />
+                    <DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation} notes={this.state.notes}
+                        filterNotes={undefined} searchWord={() => this.state.searchOn ? this.state.searchNote : null} />
                 </View>
 
                 <Appbar style={{ height: '7%', backgroundColor: 'red', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>

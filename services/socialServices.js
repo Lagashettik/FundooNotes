@@ -7,8 +7,7 @@ class SocialServices {
 
     facebookLogin = async () => {
         login = false
-        await LoginManager
-            .logInWithPermissions(['public_profile', 'email'])
+        await LoginManager.logInWithPermissions(['public_profile', 'email'])
             .then(async (result) => {
                 if (result.isCancelled) {
                     console.log('Login Cancelled')

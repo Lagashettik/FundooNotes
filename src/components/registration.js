@@ -33,35 +33,32 @@ export default class Registration extends Component {
         }
     }
 
-    userRegister = async () => {
+    userRegister = () => {
         if (this.state.email == '' && this.state.password == '') {
             this.setState({
                 snackVisible: true
             })
         }
         else {
-            let userServices = new UserServices()
             const user = {
                 firstName: this.state.firstName,
                 lastName: this.state.lastName,
                 date: this.state.dateOfBirth.toString(),
                 emailId: this.state.email
             }
-            let value = await userServices.userRegister(user, this.state.password)
-            if (value == '') {
-                this.setState({
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: ''
-                })
+            new UserServices().userRegister(user, this.state.password)
+                .then(() => {
+                    this.setState({
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: ''
+                    })
 
-                this.props.navigation.navigate('dashboard')
-            } else {
-                console.log('errorMessage' + value)
-            }
-            
+                    this.props.navigation.navigate('dashboard')
+                })
+                .catch(error => console.log(error))
         }
     }
 
@@ -207,7 +204,7 @@ export default class Registration extends Component {
                 <View style={{ alignContent: 'center', flexDirection: 'column' }}>
 
                     <TouchableOpacity onPress={this.openDatePicker}>
-                        <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>{StringsOfLanguages.selectDOB} {this.state.dateOfBirth}</Text>
+                        <Text style={{ margin: '1%', fontSize: globalFontConstant.H3 }}>{StringsOfLanguages.selectDOB} {this.state.dateOfBirth}</Text>
                     </TouchableOpacity>
                     {
                         this.state.datePickerVisibility &&
@@ -259,7 +256,7 @@ export default class Registration extends Component {
                         onPress={this.setChecked}
                         uncheckedColor='red'
                     />
-                    <Text style={{ margin: '1%', fontSize : globalFontConstant.H3 }}>{StringsOfLanguages.showPassword}</Text>
+                    <Text style={{ margin: '1%', fontSize: globalFontConstant.H3 }}>{StringsOfLanguages.showPassword}</Text>
                 </View>
 
                 <Button mode='contained'

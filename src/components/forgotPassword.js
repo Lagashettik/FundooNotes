@@ -26,16 +26,16 @@ export default class ForgotPassword extends Component {
                 errorEmail: 'Enter email'
             })
         } else if (emailRegex.test(this.state.email)) {
-            let userServices = new UserServices()
-            let value = await userServices.resetPassword(this.state.email)
-            if (value == '')
-                this.setState({
-                    errorEmail: '',
-                    showSnackbar: true,
-                    snackbarMessage: 'Reset password instructions send to your email'
+            new UserServices().resetPassword(this.state.email)
+                .then(() => {
+                    this.setState({
+                        errorEmail: '',
+                        showSnackbar: true,
+                        snackbarMessage: 'Reset password instructions send to your email'
+                    })
                 })
-            else
-                console.log("error " + value)
+                .catch(error => console.log(error))
+
         } else {
             this.setState({
                 errorEmail: 'Enter valid email id'

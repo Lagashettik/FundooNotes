@@ -21,55 +21,45 @@ class UserServices {
 
     }
 
-    userRegister = async (user, password) => {
-        let errorMessage = '';
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(user.emailId, password)
-            .then(async (userCredential) => {
-                console.log('User registration successfully')
-                errorMessage = ''
-                await new DataServices().storeUIdToStorage(userCredential.user.uid)
-                console.log("after storage save")
-                this.saveUserToDatabase(user)
-                this.userLoggedIn()
-                console.log("end")
-            })
-            .catch(error => {
-                console.log(error.message)
-                errorMessage = error.message
-            })
+    userRegister = (user, password) => {
 
-        return errorMessage
-    }
-
-    userLogout = async () => {
-        let errorMessage = '';
-        await firebase.auth().signOut().then(async () => {
-            errorMessage = ''
-            console.log('No Error')
-            dataServices = await new DataServices()
-                .removeUIdFromStorage();
-            this.userLoggedOut()
+        return new Promise((resolve, reject) => {
+            firebase.auth()
+                .createUserWithEmailAndPassword(user.emailId, password)
+                .then(userCredential => {
+                    console.log('User registration successfully')
+                    new DataServices().storeUIdToStorage(userCredential.user.uid)
+                    this.saveUserToDatabase(user)
+                    this.userLoggedIn()
+                    resolve()
+                })
+                .catch(error => reject(error.message))
         })
-            .catch(error => {
-                errorMessage = error.message
-                console.log(error.message)
-            })
-        return errorMessage
+
     }
 
-    resetPassword = async (email) => {
-        let errorMessage = '';
-        await firebase
-            .auth()
-            .sendPasswordResetEmail(email)
-            .then(
-                errorMessage = ''
-            )
-            .catch(error => errorMessage = error.message)
-        console.log("errorMessage " + errorMessage)
-        return errorMessage
+    userLogout = () => {
+
+        return new Promise((resolve, reject) => {
+            firebase.auth().signOut()
+                .then(() => {
+                    new DataServices().removeUIdFromStorage();
+                    this.userLoggedOut()
+                    resolve()
+                })
+                .catch(error => reject(error.message))
+        })
+
+    }
+
+    resetPassword = (email) => {
+        return new Promise((resolve, reject) => {
+            firebase
+                .auth()
+                .sendPasswordResetEmail(email)
+                .then(() => resolve())
+                .catch(error => reject(error.message))
+        })
     }
 
     saveUserToDatabase = (user) => {
