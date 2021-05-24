@@ -32,7 +32,8 @@ export default class DisplayNotes extends Component {
          if (this.props.searchWord() == null)
             return isArchive != true && isDeleted != true
          else
-            return ((this.props.notes[key].title).includes(this.props.searchWord()) || (this.props.notes[key].note).includes(this.props.searchWord()))
+            return ((this.props.notes[key].title).includes(this.props.searchWord())
+               || (this.props.notes[key].note).includes(this.props.searchWord()))
                && (isArchive != true && isDeleted != true)
       }
       else if (this.props.filterNotes == 'archive')
@@ -40,10 +41,6 @@ export default class DisplayNotes extends Component {
       else if (this.props.filterNotes == 'deleted')
          return isDeleted == true
       else console.log(this.props)
-   }
-
-   componentDidMount() {
-
    }
 
    render() {

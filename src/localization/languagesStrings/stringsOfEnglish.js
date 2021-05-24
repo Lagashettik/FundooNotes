@@ -47,6 +47,9 @@ const StringsOfEnglish = {
     alreadyHaveAccount : 'I already have account,',
     restore : 'Restore',
     deleteforever : 'Delete forever',
+    editLabelTitle : 'Edit labels',
+    createLabelTitle : 'Create new label',
+    createNewLabelPlaceholder : 'Create new label'
 }
 
 export default StringsOfEnglish;

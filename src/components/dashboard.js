@@ -27,8 +27,8 @@ export default class Dashboard extends Component {
         this.props.navigation.push('note-editor', { note: undefined, key: undefined })
     }
 
-    handleSearchBar = (searchWord) => {
-        this.setState({
+    handleSearchBar = async (searchWord) => {
+        await this.setState({
             searchNote: searchWord,
             searchOn: true
         })

@@ -25,9 +25,21 @@ class DataServices {
                 .catch(error => reject(error))
         })
     }
-
+    getLabelsFromDatabase = async () => {
+        uid = await this.getUIdFromStorage()
+        return new Promise((resolve, reject) => {
+            firebase.database()
+                .ref('/labels/' + uid)
+                .once('value')
+                .then(snapshot => {
+                    console.log("labels : " + JSON.stringify(snapshot.val()))
+                    resolve(snapshot.val())
+                })
+                .catch(error => reject(error))
+        })
+    }
     updateNotesToDatabase = (note, key) => {
-        console.log("noteup : " + JSON.stringify(note) + " keyup" + key)
+        console.log("noteup : " + JSON.stringify(note) + " keyup : " + key)
         return new Promise((resolve, reject) => {
             firebase.database().ref('/notes/' + uid).child(key)
                 .update(note)
@@ -107,6 +119,8 @@ class DataServices {
             console.log("Async storage remove error : " + error)
         }
     }
+
+
 
 }
 
