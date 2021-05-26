@@ -13,6 +13,8 @@ export default class NoteEditor extends Component {
             note: "",
             title: "",
             selectedIcon: '',
+            labels: [],
+            label : '',
             disableTouch: false
         }
     }
@@ -47,7 +49,7 @@ export default class NoteEditor extends Component {
                     note: this.state.note
                 }
                 console.log(note)
-                await new DataServices().saveNotesToDatabase(note)
+                new DataServices().saveNotesToDatabase(note)
             }
         } else {
             this.updateNote()
@@ -126,6 +128,19 @@ export default class NoteEditor extends Component {
     archiveNote = () => {
         if (this.props.route.params.key != undefined && !this.state.disableTouch)
             new DataServices().archiveNote(this.props.route.params.key)
+    }
+
+    createOrEditLabel = (label) => {
+        this.setState({
+            label : label
+        })
+    }
+
+    addLabel = async () => {
+       this.setState({
+            labels: [...this.state.labels, this.state.label],
+            label : ''
+        })
     }
 
     render() {

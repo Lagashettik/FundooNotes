@@ -65,8 +65,8 @@ class UserServices {
     saveUserToDatabase = (user) => {
         console.log("save database start")
         new DataServices().getUIdFromStorage()
-            .then(async uid => {
-                await firebase.database()
+            .then(uid => {
+                firebase.database()
                     .ref('users/' + uid)
                     .push(user)
                 console.log("User done")

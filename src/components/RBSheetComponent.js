@@ -25,6 +25,11 @@ const RBSheetComponent = (props) => {
         props.navigation.push('home-page')
     }
 
+    const goToCreateSelectionLabel = () => {
+        console.log("Label")
+        props.navigation.push('createSelectionLabel')
+    }
+
     return (
         <View style={{ width: '100%', height: '100%' }}>{
             !props.disableTouch ?
@@ -66,7 +71,9 @@ const RBSheetComponent = (props) => {
                         colors: {
                             primary: 'red'
                         }
-                    }} icon={props.selectedIcon == "plus" ? props.box : props.labelOutline}>
+                    }} icon={props.selectedIcon == "plus" ? props.box : props.labelOutline}
+                        onPress={props.selectedIcon == "plus" ? null : goToCreateSelectionLabel}
+                    >
                         {props.selectedIcon == "plus" ? props.boxLabel : props.labelOutlineLabel}</Button>
                 </View>
                 :

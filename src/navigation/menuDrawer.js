@@ -6,7 +6,7 @@ import ArchiveDashboard from '../components/archiveDashboard';
 import DeletedDashboard from '../components/deletedDashboard';
 import LanguageSelection from '../components/languageSelection';
 import StringsOfLanguages from '../localization/stringsOfLanguages';
-import CreateSelection from '../components/createSelection';
+import CreateSelectionLabel from '../components/createSelectionLabel';
 
 const Drawer = createDrawerNavigator();
 
@@ -15,9 +15,9 @@ const MenuDrawer = () => {
         <Drawer.Navigator drawerType='Slide' drawerStyle={{ width: '50%' }}>
             <Drawer.Screen name={StringsOfLanguages.dashboard} component={Dashboard} />
             <Drawer.Screen name={StringsOfLanguages.archive} component={ArchiveDashboard} />
-            <Drawer.Screen name={StringsOfLanguages.deleted} component={DeletedDashboard}/>
+            <Drawer.Screen name={StringsOfLanguages.deleted} component={DeletedDashboard} />
             <Drawer.Screen name={StringsOfLanguages.language} component={LanguageSelection} />
-            <Drawer.Screen name={StringsOfLanguages.createLabelTitle} component={CreateSelection} />
+            <Drawer.Screen name={StringsOfLanguages.createLabelTitle} component={CreateSelectionLabel} />
             <Drawer.Screen name={StringsOfLanguages.signOut} component={Logout} />
         </Drawer.Navigator>
     );
