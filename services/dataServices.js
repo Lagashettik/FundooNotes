@@ -19,7 +19,6 @@ class DataServices {
                     .ref('notes/' + uid)
                     .once('value')
                     .then((snapshot) => {
-                        console.log(snapshot.val())
                         resolve(snapshot.val())
                     })
                     .catch(error => reject(error))
@@ -28,17 +27,36 @@ class DataServices {
         })
     }
 
-    updateNotesToDatabase = (note, key) => {
-        console.log("noteup : " + JSON.stringify(note) + " keyup : " + key)
+    updateNoteToDatabase = (note, key) => {
         return new Promise((resolve, reject) => {
-            firebase.database().ref('/notes/' + uid).child(key)
-                .update(note)
-                .then(() =>
-                    resolve()
-                ).catch(error => reject(error))
+            this.getUIdFromStorage().then(uid => {
+                firebase.database().ref('/notes/' + uid).child(key)
+                    .update(note)
+                    .then(() =>
+                        resolve()
+                    ).catch(error => reject(error))
+            })
+                .catch(error => reject(error))
+
         })
     }
 
+    getNoteFromDatabase = (noteKey) => {
+        return new Promise((resolve, reject) => {
+            this.getUIdFromStorage().then(uid => {
+                firebase.database()
+                    .ref('notes/' + uid)
+                    .child(noteKey)
+                    .once('value')
+                    .then((snapshot) => {
+                        resolve(snapshot.val())
+                    })
+                    .catch(error => reject(error.message))
+
+            })
+                .catch(error => reject(error.message))
+        })
+    }
     deleteOrRestoreNote = (key, deletes = true) => {
         console.log(key)
         deleted = {
@@ -48,7 +66,7 @@ class DataServices {
             firebase.database().ref('/notes/' + uid).child(key).update(deleted)
             console.log("after deleted")
         })
-        .catch(error => console.log(error))
+            .catch(error => console.log(error))
     }
 
     archiveNote = (key) => {
@@ -57,9 +75,9 @@ class DataServices {
             isArchive: true
         }
         this.getUIdFromStorage().then(uid => {
-        firebase.database().ref('/notes/' + uid).child(key).update(archive)
+            firebase.database().ref('/notes/' + uid).child(key).update(archive)
         })
-        .catch(error => console.log(error))
+            .catch(error => console.log(error))
 
     }
 
@@ -115,49 +133,65 @@ class DataServices {
         }
     }
 
-    getLabelsFromDatabase = async () => {
+    getLabelsFromDatabase = () => {
         return new Promise((resolve, reject) => {
-            this.getUIdFromStorage().then(uid =>{
+            this.getUIdFromStorage().then(uid => {
                 firebase.database()
-                .ref('/labels/' + uid)
-                .once('value')
-                .then(snapshot => {
-                    console.log("labels : " + JSON.stringify(snapshot.val()))
-                    resolve(snapshot.val())
-                })
-                .catch(error => reject(error))
+                    .ref('/labels/' + uid)
+                    .once('value')
+                    .then(snapshot => {
+                        resolve(snapshot.val())
+                    })
+                    .catch(error => reject(error))
             })
-            .catch(error => reject(error))
-            
+                .catch(error => reject(error))
+
         })
     }
 
-    addLabelToDatabase =  (labelObject) => {
+    addLabelToDatabase = (labelObject) => {
+        this.getUIdFromStorage().then(uid => {
+            console.log("add")
+            firebase.database()
+                .ref('/labels/' + uid)
+                .push(labelObject)
+        })
+            .catch(error => console.log(error))
+
+    }
+
+    updateLabelToDatabase = (newLabel, key) => {
         this.getUIdFromStorage().then(uid => {
             firebase.database()
-            .ref('/labels/' + uid)
-            .push(labelObject)
+                .ref('/labels/' + uid)
+                .child(key)
+                .update(newLabel)
         })
-        .catch(error => console.log(error))
-        
-    }
-
-    updateLabelToDatabase = async (newLabel, key) => {
-         this.getUIdFromStorage().then(uid => {
-             firebase.database()
-            .ref('/labels/' + uid)
-            .child(key)
-            .update(newLabel)
-         })
-        .catch(error => console.log(error))
+            .catch(error => console.log(error))
     }
 
     deleteLabelFromDatabase = (key) => {
-        this.getUIdFromStorage().then(uid =>{
+        this.getUIdFromStorage().then(uid => {
+            firebase.database()
+                .ref('/labels/' + uid)
+                .child(key)
+                .remove()
+        })
+    }
+
+    getLabelName = (labelKey) =>{
+        return new Promise((resolve,reject) => {
+            this.getUIdFromStorage().then(uid =>{
             firebase.database()
             .ref('/labels/' + uid)
-            .child(key)
-            .remove()
+            .child(labelKey)
+            .once('value')
+            .then(snapshot => {
+                resolve(snapshot.val())
+            })
+            .catch(error => reject(error.message))
+        })
+        .catch(error => reject(error.message))
         })
     }
 

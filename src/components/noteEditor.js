@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, BackHandler } from 'react-native';
-import { Appbar, TextInput, IconButton, Text } from 'react-native-paper';
+import { Appbar, TextInput, IconButton, Text, Chip } from 'react-native-paper';
 import DataServices from '../../services/dataServices';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import RBSheetComponent from './RBSheetComponent'
@@ -13,8 +13,8 @@ export default class NoteEditor extends Component {
             note: "",
             title: "",
             selectedIcon: '',
-            labels: [],
-            label : '',
+            labels: '',
+            labelArray: [],
             disableTouch: false
         }
     }
@@ -46,7 +46,8 @@ export default class NoteEditor extends Component {
             if (this.state.title != "" || this.state.note != "") {
                 let note = {
                     title: this.state.title,
-                    note: this.state.note
+                    note: this.state.note,
+                    labels: this.state.labels
                 }
                 console.log(note)
                 new DataServices().saveNotesToDatabase(note)
@@ -65,9 +66,10 @@ export default class NoteEditor extends Component {
         if (!this.checkUpdate()) {
             let note = {
                 title: this.state.title,
-                note: this.state.note
+                note: this.state.note,
+                labels: this.state.labels
             }
-            new DataServices().updateNotesToDatabase(note, this.props.route.params.key)
+            new DataServices().updateNoteToDatabase(note, this.props.route.params.key)
                 .then(() => console.log("Update completed!!!"))
                 .catch(error => console.log(error))
         }
@@ -79,15 +81,31 @@ export default class NoteEditor extends Component {
     }) === JSON.stringify(this.props.route.params.note)
 
     componentDidMount() {
+        console.log('component')
         if (this.props.route.params.note != undefined) {
+            if (this.props.route.params.note.labels != undefined) {
+                let arrayLabelKeys = this.props.route.params.note.labels.split(',')
+                let arrayLabel = []
+                arrayLabelKeys.map(key => new DataServices().getLabelName(key).then(async data => {
+                    await arrayLabel.push(data.labelName)
+                    this.setState({
+                        labelArray: arrayLabel
+                    })
+                    console.log(this.state.labelArray)
+                })
+                    .catch(error => console.log(error)))
+            }
             this.setState({
                 title: this.props.route.params.note.title,
-                note: this.props.route.params.note.note
+                note: this.props.route.params.note.note,
+                labels: this.props.route.params.labels
             })
         } else {
             this.setState({
-                title: '',
-                note: ''
+                note: "",
+                title: "",
+                labels: '',
+                labelArray: []
             })
         }
 
@@ -130,18 +148,10 @@ export default class NoteEditor extends Component {
             new DataServices().archiveNote(this.props.route.params.key)
     }
 
-    createOrEditLabel = (label) => {
-        this.setState({
-            label : label
-        })
+    lablesToArray = () => {
+        arrayLabel = this.state.labels.split(',')
     }
 
-    addLabel = async () => {
-       this.setState({
-            labels: [...this.state.labels, this.state.label],
-            label : ''
-        })
-    }
 
     render() {
         return (
@@ -157,7 +167,7 @@ export default class NoteEditor extends Component {
                             !this.state.disableTouch &&
                             <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
                                 <IconButton icon="pin-outline" color='red' />
-                                <IconButton icon="bell-plus-outline" color='red' />
+                                <IconButton icon="bell-plus-outline" color='red' onPress={() => console.log(this.props.route.params.note)} />
                                 <IconButton icon={require('../assets/archive.png')} color='red' onPress={this.archiveNote} />
                             </View>
                         }
@@ -174,6 +184,16 @@ export default class NoteEditor extends Component {
                             }}
                             value={this.state.title}
                             onChangeText={this.handleTitle} />
+                        <View style={{flexDirection : 'row',flexWrap:'wrap'}}>
+                            {
+                                this.state.labelArray != [] && this.state.labelArray != undefined &&
+                                this.state.labelArray.map(labelName => {
+                                    return (
+                                        <Chip style={{ width: '30%' }}>{labelName}</Chip>
+                                    )
+                                })
+                            }
+                        </View>
                         <TextInput placeholder={StringsOfLanguages.note} style={{ backgroundColor: 'white' }}
                             multiline={true} mode='flat' selectionColor='red'
                             underlineColor='white' disabled={this.state.disableTouch}

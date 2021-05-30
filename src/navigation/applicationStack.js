@@ -10,7 +10,9 @@ import NoteEditor from '../components/noteEditor';
 import MenuDrawer from './menuDrawer';
 import DisplayNotes from '../components/displayNotes';
 import SplashScreen from '../components/splashScreen';
-import CreateSelectionLabel from '../components/createSelectionLabel';
+import CreateUpdateLabel from '../components/createUpdateLabel';
+import DisplayLabels from '../components/displayLabels';
+import SearchSelectLabel from '../components/searchSelectLabel';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +28,9 @@ ApplicationStack = () => {
                 <Stack.Screen name="dashboard" component={Dashboard} />
                 <Stack.Screen name="note-editor" component={NoteEditor} />
                 <Stack.Screen name="display-note" component={DisplayNotes} />
-                <Stack.Screen name="create-selection-label" component={CreateSelectionLabel}/>
+                <Stack.Screen name="create-update-label" component={CreateUpdateLabel}/>
+                <Stack.Screen name="display-labels" component={DisplayLabels} />
+                <Stack.Screen name="search-select-label" component={SearchSelectLabel}/>
                 <Stack.Screen name="home-page" component={MenuDrawer} />
             </Stack.Navigator>
         </NavigationContainer>

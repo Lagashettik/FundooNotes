@@ -7,13 +7,13 @@ import StringsOfLanguages from '../localization/stringsOfLanguages';
 const RBSheetComponent = (props) => {
     console.log(props)
 
-    const deleteOrDeleteForeverNote = async () => {
+    const deleteOrDeleteForeverNote =  () => {
         console.log('noteKey : ' + props.noteKey)
         if (props.noteKey != undefined) {
             if (!props.disableTouch)
-                await new DataServices().deleteOrRestoreNote(props.noteKey)
+                 new DataServices().deleteOrRestoreNote(props.noteKey)
             else
-                await new DataServices().removeNotesFromDatabase(props.noteKey)
+                 new DataServices().removeNotesFromDatabase(props.noteKey)
         }
         console.log('after noteKey')
         props.navigation.push('home-page')
@@ -27,7 +27,7 @@ const RBSheetComponent = (props) => {
 
     const goToCreateSelectionLabel = () => {
         console.log("Label")
-        props.navigation.push('createSelectionLabel')
+        props.navigation.push('search-select-label',{noteKey:props.noteKey})
     }
 
     return (

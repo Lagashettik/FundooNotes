@@ -50,7 +50,7 @@ export default class DisplayNotes extends Component {
             style={{ height: '90%' }}>
             {
                this.props.notes != undefined &&
-               Object.getOwnPropertyNames(this.props.notes).map((key, index) => {
+               Object.getOwnPropertyNames(this.props.notes).map((key) => {
                   if (this.filterNotes(this.props.notes[key].isArchive, this.props.notes[key].isDeleted, key))
                      return (
                         <Card key={key}
