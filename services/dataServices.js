@@ -13,12 +13,16 @@ class DataServices {
     }
 
     getNotesFromDatabase = () => {
+        console.log("inside getNotes")
         return new Promise((resolve, reject) => {
             this.getUIdFromStorage().then(uid => {
+                console.log("uid : " + uid)
                 firebase.database()
-                    .ref('notes/' + uid)
+                    .ref('notes/')
+                    .child(uid)
                     .once('value')
                     .then((snapshot) => {
+                        console.log("Notes : " + JSON.stringify(snapshot))
                         resolve(snapshot.val())
                     })
                     .catch(error => reject(error))
@@ -48,7 +52,7 @@ class DataServices {
                     .ref('notes/' + uid)
                     .child(noteKey)
                     .once('value')
-                    .then((snapshot) => {
+                     ((snapshot) => {
                         resolve(snapshot.val())
                     })
                     .catch(error => reject(error.message))
@@ -179,20 +183,25 @@ class DataServices {
         })
     }
 
-    getLabelName = (labelKey) =>{
-        return new Promise((resolve,reject) => {
-            this.getUIdFromStorage().then(uid =>{
-            firebase.database()
-            .ref('/labels/' + uid)
-            .child(labelKey)
-            .once('value')
-            .then(snapshot => {
-                resolve(snapshot.val())
+    getLabelName = (labelKey) => {
+        return new Promise(async (resolve, reject) => {
+            await this.getUIdFromStorage().then(uid => {
+                firebase.database()
+                    .ref('/labels/' + uid)
+                    .child(labelKey)
+                    .once('value')
+                    .then(snapshot => {
+                        console.log("LabelName Dataservices : " + snapshot.val().labelName)
+                        resolve(snapshot.val().labelName)
+                    })
+                    .catch(error => reject(error.message))
             })
-            .catch(error => reject(error.message))
+                .catch(error => reject(error.message))
         })
-        .catch(error => reject(error.message))
-        })
+    }
+
+    addNoteKeyToLabel = (noteKey, labelKey) => {
+
     }
 
 }

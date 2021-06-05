@@ -74,10 +74,9 @@ export default class DisplayLabels extends Component {
     }
 
     deleteLabel = (key) => {
-        // console.log('removed')
-        // new DataServices().deleteLabelFromDatabase(key)
-        // this.props.navigation.push('display-labels')
-        this.state.editing != key ? console.log("Pressed") : console.log("deleted")
+        console.log('removed')
+        new DataServices().deleteLabelFromDatabase(key)
+        this.props.navigation.push('display-labels')
     }
 
     render() {
@@ -104,10 +103,6 @@ export default class DisplayLabels extends Component {
                                         }}
                                         onFocus={() => this.textInputFocus(key)}
                                         onEndEditing={this.textInputEndEditing}
-                                        // left={this.state.editing == key ? <TextInput.Icon name='delete-outline'
-                                        //     onPress={console.log("pressed")} />
-                                        //     : <TextInput.Icon name='label-outline'
-                                        //         onPress={console.log(this.state.editing)} />}
                                         right={<TextInput.Icon name={this.state.editing == key ? 'check' : 'pencil'} />}
                                     />
                                 </View>

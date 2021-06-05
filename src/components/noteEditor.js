@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { View, BackHandler } from 'react-native';
-import { Appbar, TextInput, IconButton, Text, Chip } from 'react-native-paper';
+import {
+    Appbar, TextInput, IconButton, Text, Chip, Modal, Portal, Provider, Button
+} from 'react-native-paper';
 import DataServices from '../../services/dataServices';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import RBSheetComponent from './RBSheetComponent'
 import StringsOfLanguages from '../localization/stringsOfLanguages';
+import AddReminder from './addReminder';
 
 export default class NoteEditor extends Component {
     constructor(props) {
@@ -15,7 +18,8 @@ export default class NoteEditor extends Component {
             selectedIcon: '',
             labels: '',
             labelArray: [],
-            disableTouch: false
+            disableTouch: false,
+            showAddReminder: false
         }
     }
 
@@ -86,12 +90,11 @@ export default class NoteEditor extends Component {
             if (this.props.route.params.note.labels != undefined) {
                 let arrayLabelKeys = this.props.route.params.note.labels.split(',')
                 let arrayLabel = []
-                arrayLabelKeys.map(key => new DataServices().getLabelName(key).then(async data => {
-                    await arrayLabel.push(data.labelName)
+                arrayLabelKeys.map(key => new DataServices().getLabelName(key).then(async labelName => {
+                    await arrayLabel.push(labelName)
                     this.setState({
                         labelArray: arrayLabel
                     })
-                    console.log(this.state.labelArray)
                 })
                     .catch(error => console.log(error)))
             }
@@ -127,17 +130,17 @@ export default class NoteEditor extends Component {
         this.backHandler.remove();
     }
 
-    handlePlusIconButton = () => {
+    handlePlusIconButton = async () => {
         if (!this.state.disableTouch) {
-            this.setState({
+            await this.setState({
                 selectedIcon: 'plus'
             })
             this.RBSheet.open()
         }
     }
 
-    handleDotsIconButton = () => {
-        this.setState({
+    handleDotsIconButton = async () => {
+        await this.setState({
             selectedIcon: 'dots'
         })
         this.RBSheet.open()
@@ -152,10 +155,24 @@ export default class NoteEditor extends Component {
         arrayLabel = this.state.labels.split(',')
     }
 
+    handleBellPlusIconButton = async () => {
+        await this.setState({
+            selectedIcon: 'bell'
+        })
+        this.RBSheet.open()
+    }
+
+    showAddReminder = () => {
+        this.setState({
+            showAddReminder: true
+        })
+        this.RBSheet.close()
+    }
+    hideAddReminder = () => this.setState({ showAddReminder: false })
 
     render() {
         return (
-            <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor: 'white' }}>
+            <View style={{ height: '100%', justifyContent: 'space-between', backgroundColor: 'white', marginLeft: '1%' }}>
                 <View>
                     <Appbar
                         style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}
@@ -167,7 +184,7 @@ export default class NoteEditor extends Component {
                             !this.state.disableTouch &&
                             <View style={{ width: '50%', justifyContent: 'flex-end', flexDirection: 'row' }}>
                                 <IconButton icon="pin-outline" color='red' />
-                                <IconButton icon="bell-plus-outline" color='red' onPress={() => console.log(this.props.route.params.note)} />
+                                <IconButton icon="bell-plus-outline" color='red' onPress={this.handleBellPlusIconButton} />
                                 <IconButton icon={require('../assets/archive.png')} color='red' onPress={this.archiveNote} />
                             </View>
                         }
@@ -184,12 +201,12 @@ export default class NoteEditor extends Component {
                             }}
                             value={this.state.title}
                             onChangeText={this.handleTitle} />
-                        <View style={{flexDirection : 'row',flexWrap:'wrap'}}>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginLeft: '2%' }}>
                             {
                                 this.state.labelArray != [] && this.state.labelArray != undefined &&
                                 this.state.labelArray.map(labelName => {
                                     return (
-                                        <Chip style={{ width: '30%' }}>{labelName}</Chip>
+                                        <Chip mode={'outlined'} style={{ width: '30%', marginLeft: '1%' }} key={labelName}>{labelName}</Chip>
                                     )
                                 })
                             }
@@ -207,6 +224,9 @@ export default class NoteEditor extends Component {
                     </View>
                 </View>
 
+                <AddReminder handleShowAddReminder={this.showAddReminder} hideAddReminder={this.hideAddReminder}
+                showAddReminder={this.state.showAddReminder}  />
+
                 <Appbar theme={{ colors: { primary: 'white' } }} style={{ height: '7%' }}>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
                         <IconButton icon="plus-box-outline" color='red' onPress={this.handlePlusIconButton} />
@@ -215,7 +235,7 @@ export default class NoteEditor extends Component {
                             ref={ref => {
                                 this.RBSheet = ref;
                             }}
-                            height={this.state.disableTouch ? 100 : 300}
+                            height={this.state.disableTouch ? 100 : this.state.selectedIcon != 'bell' ? 300 : 100}
                             openDuration={250}
                             customStyles={{
                                 container: {
@@ -236,16 +256,23 @@ export default class NoteEditor extends Component {
                                         noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
                                         navigation={this.props.navigation} disableTouch={this.state.disableTouch}
                                     /> :
-                                    <RBSheetComponent
-                                        selectedIcon={this.state.selectedIcon}
-                                        deleteOutline="delete-outline" deleteOutlineLabel={StringsOfLanguages.delete}
-                                        contentCopy="content-copy" contentCopyLabel={StringsOfLanguages.makeCopy}
-                                        shareVariant="share-variant" shareVariantLabel={StringsOfLanguages.send}
-                                        accountPlusOutline="account-plus-outline" accountPlusOutlineLabel={StringsOfLanguages.collaborator}
-                                        labelOutline="label-outline" labelOutlineLabel={StringsOfLanguages.labels}
-                                        noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
-                                        navigation={this.props.navigation} disableTouch={this.state.disableTouch}
-                                    />
+                                    this.state.selectedIcon == 'dots' ?
+                                        <RBSheetComponent
+                                            selectedIcon={this.state.selectedIcon}
+                                            deleteOutline="delete-outline" deleteOutlineLabel={StringsOfLanguages.delete}
+                                            contentCopy="content-copy" contentCopyLabel={StringsOfLanguages.makeCopy}
+                                            shareVariant="share-variant" shareVariantLabel={StringsOfLanguages.send}
+                                            accountPlusOutline="account-plus-outline" accountPlusOutlineLabel={StringsOfLanguages.collaborator}
+                                            labelOutline="label-outline" labelOutlineLabel={StringsOfLanguages.labels}
+                                            noteKey={this.props.route.params.key != undefined ? this.props.route.params.key : undefined}
+                                            navigation={this.props.navigation} disableTouch={this.state.disableTouch}
+                                        /> :
+                                        <RBSheetComponent
+                                            selectedIcon={this.state.selectedIcon}
+                                            showAddReminder={this.showAddReminder}
+                                            clockOutline='clock-outline' clockLabel='Choosee a date and time'
+                                            placeOutline='map-marker-outline' placeLabel='Choose a place'
+                                        />
                             }
                         </RBSheet>
                     </View>

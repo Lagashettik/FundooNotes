@@ -13,11 +13,6 @@ export default class DeletedDashboard extends Component {
         }
     }
 
-    componentDidMount() {
-        new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
-            .catch(error => console.log(error))
-    }
-
     render() {
         return (
             <View style={{ height: '100%', width: '100%' }}>
@@ -32,7 +27,7 @@ export default class DeletedDashboard extends Component {
                 </View>
 
                 <DisplayNotes filterNotes='deleted' navigation={this.props.navigation}
-                    notes={this.state.notes} showGrid={() => false} />
+                     showGrid={() => false} />
             </View>
         )
     }

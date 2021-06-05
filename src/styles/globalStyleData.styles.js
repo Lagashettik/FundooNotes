@@ -24,16 +24,22 @@ const globalThemeConstant = {
             primary: 'red',
             placeholder: 'gray'
         }
+    },
+    TimePlaceButtonTheme: {
+        roundness: 10,
+        colors: {
+            primary: 'black'
+        }
     }
 }
 
 const globalLabelConstant = {
-    educational : 'Educational',
-    document : 'Document',
-    personal : 'Personal',
-    work : 'Work',
-    inspiration : 'Inspiration',
-    other : 'Other'
+    educational: 'Educational',
+    document: 'Document',
+    personal: 'Personal',
+    work: 'Work',
+    inspiration: 'Inspiration',
+    other: 'Other'
 }
 
 export { globalColorConstant, globalFontConstant, globalThemeConstant, globalLabelConstant }

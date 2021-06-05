@@ -11,7 +11,6 @@ export default class Dashboard extends Component {
         super()
         this.state = {
             showGrid: false,
-            notes: {},
             searchNote: '',
             searchOn: false
         }
@@ -39,9 +38,6 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
-        new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
-            .catch(error => console.log(error))
-
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => BackHandler.exitApp())
     }
 
@@ -69,9 +65,9 @@ export default class Dashboard extends Component {
                             <IconButton icon="face" size={30} color='white' size={30} style={{ marginLeft: -10 }} onPress={this.logout} />
                         </View>
                     </Appbar>
-
-                    <DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation} notes={this.state.notes}
+                    < DisplayNotes showGrid={() => this.state.showGrid} navigation={this.props.navigation}
                         filterNotes={undefined} searchWord={() => this.state.searchOn ? this.state.searchNote : null} />
+
                 </View>
 
                 <Appbar style={{ height: '7%', backgroundColor: 'red', width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>

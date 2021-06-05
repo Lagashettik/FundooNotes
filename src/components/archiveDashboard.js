@@ -14,11 +14,6 @@ export default class ArchiveDashboard extends Component {
         }
     }
 
-    componentDidMount() {
-        new DataServices().getNotesFromDatabase().then(data => this.setState({ notes: data }))
-            .catch(error => console.log(error))
-    }
-
     render() {
         return (
             <View style={{ height: '100%', width: '100%' }}>
@@ -41,7 +36,7 @@ export default class ArchiveDashboard extends Component {
                 </View>
 
                 <DisplayNotes filterNotes='archive' navigation={this.props.navigation}
-                    notes={this.state.notes} showGrid={() => this.state.showGrid} />
+                     showGrid={() => this.state.showGrid} />
             </View>
         )
     }
