@@ -134,22 +134,6 @@ const RBSheetComponent = (props) => {
                     >{StringsOfLanguages.deleteforever}</Button>
                 </View>
         }
-            {/* <Provider>
-                <Portal>
-                    <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={{backgroundColor:'red',height:'200%'}} >
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                        <Text>Hey</Text>
-                    </Modal>
-                </Portal>
-            </Provider> */}
         </View>
     )
 }

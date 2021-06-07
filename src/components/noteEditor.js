@@ -68,6 +68,7 @@ export default class NoteEditor extends Component {
             note: this.state.title
         }) + " key : " + this.props.route.params.key)
         if (!this.checkUpdate()) {
+            console.log("Update ______________________________  : " + JSON.stringify(this.props.route.params.note))
             let note = {
                 title: this.state.title,
                 note: this.state.note,
@@ -101,7 +102,7 @@ export default class NoteEditor extends Component {
             this.setState({
                 title: this.props.route.params.note.title,
                 note: this.props.route.params.note.note,
-                labels: this.props.route.params.labels
+                labels: this.props.route.params.note.labels
             })
         } else {
             this.setState({
@@ -162,13 +163,20 @@ export default class NoteEditor extends Component {
         this.RBSheet.open()
     }
 
-    showAddReminder = () => {
+    handleShowAddReminder = () => {
         this.setState({
             showAddReminder: true
         })
         this.RBSheet.close()
     }
     hideAddReminder = () => this.setState({ showAddReminder: false })
+
+    addReminder = (reminderDateTime) => {
+        let reminder = {
+            reminder: reminderDateTime
+        }
+        new DataServices().updateNoteToDatabase(reminder, this.props.route.params.key)
+    }
 
     render() {
         return (
@@ -224,8 +232,8 @@ export default class NoteEditor extends Component {
                     </View>
                 </View>
 
-                <AddReminder handleShowAddReminder={this.showAddReminder} hideAddReminder={this.hideAddReminder}
-                showAddReminder={this.state.showAddReminder}  />
+                <AddReminder hideAddReminder={this.hideAddReminder} addReminder={this.addReminder}
+                    showAddReminder={this.state.showAddReminder} />
 
                 <Appbar theme={{ colors: { primary: 'white' } }} style={{ height: '7%' }}>
                     <View style={{ justifyContent: 'space-between', flexDirection: 'row', width: '100%' }}>
@@ -269,8 +277,8 @@ export default class NoteEditor extends Component {
                                         /> :
                                         <RBSheetComponent
                                             selectedIcon={this.state.selectedIcon}
-                                            showAddReminder={this.showAddReminder}
-                                            clockOutline='clock-outline' clockLabel='Choosee a date and time'
+                                            showAddReminder={this.handleShowAddReminder}
+                                            clockOutline='clock-outline' clockLabel='Choose a date and time'
                                             placeOutline='map-marker-outline' placeLabel='Choose a place'
                                         />
                             }

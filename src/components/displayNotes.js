@@ -60,10 +60,11 @@ export default class DisplayNotes extends Component {
          })
          .catch(error => console.log("getNoteError : " + error))
 
+
    }
 
-   editNote = (noteKey,noteData) => {
-      console.log("NoteKey : "+noteKey + " Note : " + JSON.stringify(this.state.notes))
+   editNote = (noteKey, noteData) => {
+      console.log("NoteKey : " + noteKey + " Note : " + JSON.stringify(this.state.notes))
       if (this.props.filterNotes != 'deleted')
          this.props.navigation.push('note-editor', { note: noteData, key: noteKey })
       else
@@ -106,37 +107,53 @@ export default class DisplayNotes extends Component {
 
    }
 
-   getLabelNames = async (labels) => {
-      try{
-         let labelKeyArray = await labels.split(",")
-         // let labelNameArray
-         console.log(labelKeyArray)
-         // await labelKeyArray.map(labelKey => {
-         //    console.log(labelKey)
-         // })
-      } catch(error){
-         console.log("catch : " + error)
-      }
-      // return new Promise(async (resolve, reject) => {
-      //    console.log('labels ' + labels)
-      //    console.log("labels array : " + await labels.split(','))
-      //    let labelKeyArray = await labels.split(',')
-      //    console.log(labelKeyArray)
-      //    let labelNameArray = []
-      //    await labelKeyArray.map(labelkey => {
-      //       // console.log("labelKey : " + labelkey)
-      //       new DataServices().getLabelName(labelkey)
-      //          .then(labelName => {
-      //             console.log("LabelName : " + labelName)
-      //             labelNameArray.push(labelName)
-      //             console.log("getLabelNames labelNameArray : " + JSON.stringify(labelNameArray))
-      //          })
-      //          .catch(error => console.log("getLabelName error : " + error))
-      //    })
-      //    // console.log("getLabelNames labelNameArray : " + JSON.stringify(labelNameArray))
-      //    resolve(labelNameArray)
-      // })
-   }
+   // getLabelNames = async (labels) => {
+   //    try{
+   //       let labelKeyArray = await labels.split(",")
+   //       let labelNameArray
+   //       console.log(labelKeyArray)
+   //       await labelKeyArray.map(labelKey => {
+   //          console.log(labelKey)
+   //       })
+   //    } catch(error){
+   //       console.log("catch : " + error)
+   //    }
+
+   //    return new Promise((resolve, reject) => {
+   //       // console.log('labels ' + labels)
+   //       // console.log("labels array : " + await labels.split(','))
+   //       let labelKeyArray = labels.split(',')
+   //       console.log(labelKeyArray)
+   //       let labelNameArray = []
+   //       labelKeyArray.map(labelkey => {
+   //          console.log("labelKey : " + labelkey)
+   //          this.getLabelNameFromDatabase(labelkey)
+   //             .then(async labelName => await labelNameArray.push(labelName))
+   //             .catch(error => console.log(error))
+   //          // await new DataServices().getLabelName(labelkey)
+   //          //    .then(labelName => {
+   //          //       console.log("LabelName : " + labelName)
+   //          //       labelNameArray.push(labelName)
+   //          //       console.log("getLabelNames labelNameArray : " + JSON.stringify(labelNameArray))
+   //          //       resolve(labelNameArray)
+   //          //    })
+   //          //    .catch(error => console.log("getLabelName error : " + error))
+
+   //          console.log("getLabelNames labelNameArray : " + labelNameArray)
+   //       })
+   //       console.log("getLabelNames labelNameArray second : " + labelNameArray)
+   //       resolve(labelNameArray)
+
+   //    })
+   // }
+
+   // getLabelNameFromDatabase = (labelKey) => {
+   //    return new Promise((resolve, reject) => {
+   //       new DataServices().getLabelName(labelKey)
+   //          .then(labelName => resolve(labelName))
+   //          .catch(error => reject(error))
+   //    })
+   // }
 
    render() {
       return (
@@ -163,19 +180,19 @@ export default class DisplayNotes extends Component {
                if (this.filterNotes(key.item.value.isArchive, key.item.value.isDeleted, key.item)) {
                   return (
                      <Card key={key.index}
-                        onPress={() => this.editNote(key.item.key,key.item.value)}
+                        onPress={() => this.editNote(key.item.key, key.item.value)}
                         style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%', backgroundColor: 'white' }}>
                         <Card.Title title={key.item.value.title} subtitle={key.item.value.note} key={key.index} />
                         {
                            // console.log("check : " + JSON.stringify(key.item.value.labels)),
-                           console.log(key.item.value.labels != undefined),
-                           key.item.value.labels != undefined ?
-                           // this.getLabelNames("-MaYr9lOOxBgCGf3fHz9")
-                           console.log("xxxxxxxxxxxxxxxxxxxxxxxxx")
+                           // console.log(key.item.value.labels != undefined),
+                           // key.item.value.labels != undefined ?
+                              // this.getLabelNames("-MaYr9lOOxBgCGf3fHz9")
+                              // console.log("xxxxxxxxxxxxxxxxxxxxxxxxx")
                               // this.getLabelNames(key.item.value.labels).then(labelNameArray => {
                               //    console.log("check : " + JSON.stringify(key.item.value.labels))
                               //    console.log("labelNameArray3 : " + JSON.stringify(labelNameArray))
-                              //    if (JSON.stringify(labelNameArray) != [] && labelNameArray != undefined) {
+                              //    if (labelNameArray != [] && labelNameArray != undefined) {
                               //       labelNameArray.map(labelName => {
                               //          console.log('map labelName : ' + labelName)
                               //          return (
@@ -184,7 +201,7 @@ export default class DisplayNotes extends Component {
                               //       })
                               //    }
                               // })
-                              : null
+                              // : null
                         }
                      </Card>
                   )

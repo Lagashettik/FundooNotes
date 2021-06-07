@@ -7,6 +7,7 @@ import { AddReminderStyleSheet } from '../styles/addReminder.styles';
 import { Picker } from '@react-native-picker/picker'
 import moment from 'moment';
 import { globalThemeConstant } from '../styles/globalStyleData.styles';
+import SelectDateTime from './selectDateTime';
 
 export default class AddReminder extends Component {
    constructor(props) {
@@ -14,18 +15,24 @@ export default class AddReminder extends Component {
       this.state = {
          date: '',
          time: '',
+         displayDate: '',
+         displayTime: '',
          repeat: '',
          selectTimeReminder: true,
-         icon: false
+         icon: false,
+         showSelectDateTime: false,
+         selectedDateOrTime: false
       }
    }
 
    componentDidMount() {
-      let currentDate = this.getTodayDate()
-      let currentTime = this.getCurrentTime()
+      let newDate = new Date()
+      let currentDate = this.displayDate(newDate)
+      let currentTime = this.displayTime(newDate)
       this.setState({
-         date: currentDate,
-         time: currentTime
+         date: newDate,
+         displayDate: currentDate,
+         displayTime: currentTime
       })
    }
 
@@ -33,45 +40,130 @@ export default class AddReminder extends Component {
 
    handlePlaceReminder = () => this.setState({ selectTimeReminder: false })
 
-   getTodayDate = () => {
-      let dateTime = new Date()
+   displayDate = (date) => {
+      let dateTime = new Date(date)
       let currentDate = moment(dateTime).format('LL')
       console.log(currentDate)
       return currentDate
    }
 
-   getCurrentTime = () => {
-      let dateTime = new Date()
-      let currentTime = moment(dateTime).format('LT')
-      console.log(currentTime)
-      return currentTime
+   displayTime = (timeDate) => {
+      let dateTime = new Date(timeDate)
+      let time = moment(dateTime).format('LT')
+      console.log(time)
+      return time
    }
 
    getPostDate = (days) => {
       console.log('---------------------------------------------------------')
       let dateTime = new Date()
       console.log("DayTime : " + dateTime)
-      console.log('yy : ' + moment(dateTime).add(days, 'days').calendar('LL'))
-      let postDate = moment(dateTime).add(days, 'days').calendar()
-      console.log("xx " + moment(postDate).format('LL'))
+      let date = moment(dateTime).add(days, 'days').calendar('I')
+      let postDate = new Date(date)
+      console.log("YY : " + postDate)
       console.log(postDate)
       return postDate
    }
 
-   handleAddDate = (date) => {
-      this.getPostDate(date)
-      console.log("date : " + this.getPostDate(date))
-      return 'hey'
+   handleAddDate = async (dateIncrement) => {
+      let choosenDate
+      if (dateIncrement) {
+         choosenDate = await this.getPostDate(dateIncrement)
+         console.log("date : " + this.getPostDate(dateIncrement))
+         this.setState({
+            date: choosenDate
+         })
+      }
+      else {
+         this.openCalender()
+      }
+
    }
+
+   handleAddTime = (time) => {
+      if (time) {
+         this.setState({
+            time: time
+         })
+      } else {
+         this.openClock()
+      }
+   }
+
+   handleSelectedDateTime = (dateOrTime) => {
+      if (this.state.selectedDateOrTime == 'date') {
+         this.hideSelectDateTime()
+         let date = new Date(dateOrTime.nativeEvent.timestamp)
+         console.log("DateTime : " + new Date(dateOrTime.nativeEvent.timestamp))
+         this.setState({
+            date: date,
+            displayDate: this.displayDate(date)
+         })
+         this.closeCalender()
+      }
+      if (this.state.selectedDateOrTime == 'time') {
+         this.hideSelectDateTime()
+         console.log("time : " + JSON.stringify(dateOrTime.nativeEvent.timestamp))
+         let time = new Date(dateOrTime.nativeEvent.timestamp)
+         console.log("time format : " + new Date(dateOrTime.nativeEvent.timestamp))
+         this.setState({
+            time: time,
+            displayTime: this.displayTime(time)
+         })
+         this.closeClock()
+      }
+   }
+
+   hideSelectDateTime = () => this.setState({
+      showSelectDateTime: false
+   })
+
+   closeAddReminder = () => this.props.hideAddReminder()
+
+   openCalender = () => {
+      this.setState({
+         selectedDateOrTime: 'date',
+         showSelectDateTime: true
+      })
+   }
+
+   closeCalender = () => this.setState({ selectedDateOrTime: 'calender' })
+
+   openClock = () => {
+      this.setState({
+         selectedDateOrTime: 'time',
+         showSelectDateTime: true
+      })
+   }
+
+   closeClock = () => this.setState({ selectedDateOrTime: 'clock' })
+
+   saveReminder = () => {
+      let reminder = ''
+      if (this.state.selectedDateOrTime == 'calender' || this.state.selectedDateOrTime == 'date') {
+         reminder = this.state.date
+         console.log('dateOrTime : ' + this.state.date)
+      } else {
+         reminder = this.state.time
+         console.log('dateOrTime : ' + this.state.time)
+      }
+      if (reminder != '') {
+         this.props.addReminder(reminder)
+         this.closeAddReminder()
+      }
+   }
+
+   cancelReminder = () => this.closeAddReminder()
 
    render() {
       return (
          <Provider>
             <Portal>
                <Modal visible={this.props.showAddReminder} onDismiss={this.props.hideAddReminder}
-                  contentContainerStyle={{ backgroundColor: 'white', height: '50%', width: '80%', alignSelf: 'center' }} >
-                  <View style={{ backgroundColor: 'white', height: '90%', marginTop: '5%' }} >
-                     <Text style={{ fontSize: 20, marginLeft: '10%', fontWeight: 'bold' }}>Add Reminder</Text>
+                  contentContainerStyle={{ backgroundColor: 'transparent', height: '100%', width: '80%', alignSelf: 'center' }} >
+                  <View style={{ backgroundColor: 'white', height: '45%', marginTop: '5%' }} >
+
+                     <Text style={{ fontSize: 20, marginLeft: '10%', marginTop: '10%', fontWeight: 'bold' }}>Add Reminder</Text>
                      <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                         <Button style={{ ...AddReminderStyleSheet.TimePlaceButton, borderBottomColor: this.state.selectTimeReminder ? 'red' : 'white' }}
                            theme={globalThemeConstant.TimePlaceButtonTheme}
@@ -98,10 +190,10 @@ export default class AddReminder extends Component {
                                        selectedValue={this.state.date}
                                        mode='dropdown'
                                     >
-                                       <Picker.Item label={this.state.date} value={this.state.date} />
+                                       <Picker.Item label={this.state.displayDate} value={this.state.displayDate} />
                                        <Picker.Item label='Tomorrow' value={1} />
                                        <Picker.Item label='Next week' value={7} />
-                                       <Picker.Item label='Select a date...' value={this.handleAddDate()} />
+                                       <Picker.Item label={this.state.selectedDateOrTime == 'calender' ? this.state.displayDate : 'Select a date...'} value={false} />
                                     </Picker>
                                  </View>
                                  <View style={{ height: '30%' }}>
@@ -113,16 +205,16 @@ export default class AddReminder extends Component {
                                           position: 'absolute',
                                           flexDirection: 'column-reverse'
                                        }}
-                                       onValueChange={this.handleAddDate}
-                                       selectedValue={this.state.date}
+                                       onValueChange={this.handleAddTime}
+                                       selectedValue={this.state.time}
                                        mode='dropdown'
                                     >
-                                       <Picker.Item label={this.state.time} value={this.state.time} />
+                                       <Picker.Item label={this.state.displayTime} value={this.state.displayTime} />
                                        <Picker.Item label='Morning' value={false} />
                                        <Picker.Item label='Afternoon' value={false} />
                                        <Picker.Item label='Evening' value={false} />
                                        <Picker.Item label='Night' value={false} />
-                                       <Picker.Item label='Select a time...' value='select' />
+                                       <Picker.Item label={this.state.selectedDateOrTime == 'clock' ? this.state.displayTime : 'Select a date...'} value={false} />
                                     </Picker>
                                  </View>
                                  <View style={{ height: '30%' }}>
@@ -166,10 +258,17 @@ export default class AddReminder extends Component {
                         }
                      </View>
                      <View style={{ flexDirection: 'row', alignSelf: 'flex-end', marginRight: '10%' }}>
-                        <Button  >Cancel</Button>
+                        <Button onPress={this.closeAddReminder} >Cancel</Button>
                         <Button mode='outlined' style={{ backgroundColor: 'red' }}
-                           theme={{ ...globalThemeConstant.TimePlaceButtonTheme, colors: { primary: 'white' } }} >Save</Button>
+                           theme={{ ...globalThemeConstant.TimePlaceButtonTheme, colors: { primary: 'white' } }}
+                           onPress={this.saveReminder} >Save</Button>
                      </View>
+
+                     <SelectDateTime showSelectDateTime={this.state.showSelectDateTime}
+                        handleSelectedDateTime={this.handleSelectedDateTime} hideSelectDateTime={this.hideSelectDateTime}
+                        mode={this.state.selectedDateOrTime} date={this.state.date} time={this.state.time}
+
+                     />
                   </View>
                </Modal>
             </Portal>
