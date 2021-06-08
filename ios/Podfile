@@ -14,6 +14,8 @@ target 'FundooNotesApp' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'FundooNotesAppTests' do
     inherit! :complete
     # Pods for testing

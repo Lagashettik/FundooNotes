@@ -6,7 +6,7 @@ import StringsOfLanguages from '../localization/stringsOfLanguages';
 export default class SplashScreen extends Component {
 
     checkUserLogin = () => {
-         new UserServices().checkLoginStatus().then((isLoggedIn) => {
+        new UserServices().checkLoginStatus().then((isLoggedIn) => {
             console.log("data login : " + isLoggedIn)
             if (isLoggedIn === 'true')
                 this.props.navigation.replace('home-page')
@@ -24,7 +24,6 @@ export default class SplashScreen extends Component {
                 <Image source={require('../assets/note_icon.png')} style={{ height: '25%', width: '40%' }}
                     resizeMode='contain' />
                 <Text style={{ fontSize: 40 }}>{StringsOfLanguages.appName}</Text>
-
             </View>
         )
     }

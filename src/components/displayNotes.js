@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, ScrollView, Text } from 'react-native';
+import { FlatList, ScrollView, Text, View } from 'react-native';
 import { Card, Chip } from 'react-native-paper'
 import DataServices from '../../services/dataServices';
 
@@ -13,7 +13,8 @@ export default class DisplayNotes extends Component {
          showNotes: [],
          endReached: false,
          scroll: false,
-         index: 0
+         index: 0,
+         labels: []
       }
    }
 
@@ -56,6 +57,9 @@ export default class DisplayNotes extends Component {
                   index: loadingNoteIndex,
                   showNotes: tempShowNotes
                })
+
+               new DataServices().getLabelsFromDatabase()
+                  .then(labels => this.setState({ labels: labels }))
             }
          })
          .catch(error => console.log("getNoteError : " + error))
@@ -107,53 +111,30 @@ export default class DisplayNotes extends Component {
 
    }
 
-   // getLabelNames = async (labels) => {
-   //    try{
-   //       let labelKeyArray = await labels.split(",")
-   //       let labelNameArray
-   //       console.log(labelKeyArray)
-   //       await labelKeyArray.map(labelKey => {
-   //          console.log(labelKey)
-   //       })
-   //    } catch(error){
-   //       console.log("catch : " + error)
-   //    }
+   getLabelNames = (labels) => {
 
-   //    return new Promise((resolve, reject) => {
-   //       // console.log('labels ' + labels)
-   //       // console.log("labels array : " + await labels.split(','))
-   //       let labelKeyArray = labels.split(',')
-   //       console.log(labelKeyArray)
-   //       let labelNameArray = []
-   //       labelKeyArray.map(labelkey => {
-   //          console.log("labelKey : " + labelkey)
-   //          this.getLabelNameFromDatabase(labelkey)
-   //             .then(async labelName => await labelNameArray.push(labelName))
-   //             .catch(error => console.log(error))
-   //          // await new DataServices().getLabelName(labelkey)
-   //          //    .then(labelName => {
-   //          //       console.log("LabelName : " + labelName)
-   //          //       labelNameArray.push(labelName)
-   //          //       console.log("getLabelNames labelNameArray : " + JSON.stringify(labelNameArray))
-   //          //       resolve(labelNameArray)
-   //          //    })
-   //          //    .catch(error => console.log("getLabelName error : " + error))
+      let labelKeyArray = labels.split(",")
+      return labelKeyArray
+   }
 
-   //          console.log("getLabelNames labelNameArray : " + labelNameArray)
-   //       })
-   //       console.log("getLabelNames labelNameArray second : " + labelNameArray)
-   //       resolve(labelNameArray)
 
-   //    })
-   // }
 
-   // getLabelNameFromDatabase = (labelKey) => {
-   //    return new Promise((resolve, reject) => {
-   //       new DataServices().getLabelName(labelKey)
-   //          .then(labelName => resolve(labelName))
-   //          .catch(error => reject(error))
-   //    })
-   // }
+   check = (labels) => {
+      let label = undefined
+      labels != undefined &&
+         this.getLabelNames(labels).filter(labelKey => labelKey != '').map(async labelKey => {
+            await this.getLabelNameFromDatabase(labelKey).then(labelName => {
+               console.log(labelName)
+               label = labelName
+               // return (
+               //    // <Text >{labelName}</Text>
+               //    <Chip >{labelName}</Chip>
+               // )
+            })
+         })
+      console.log("label : " + label)
+      return label != undefined && label
+   }
 
    render() {
       return (
@@ -183,26 +164,18 @@ export default class DisplayNotes extends Component {
                         onPress={() => this.editNote(key.item.key, key.item.value)}
                         style={{ margin: 10, width: this.state.showGrid ? '44%' : '95%', backgroundColor: 'white' }}>
                         <Card.Title title={key.item.value.title} subtitle={key.item.value.note} key={key.index} />
-                        {
-                           // console.log("check : " + JSON.stringify(key.item.value.labels)),
-                           // console.log(key.item.value.labels != undefined),
-                           // key.item.value.labels != undefined ?
-                              // this.getLabelNames("-MaYr9lOOxBgCGf3fHz9")
-                              // console.log("xxxxxxxxxxxxxxxxxxxxxxxxx")
-                              // this.getLabelNames(key.item.value.labels).then(labelNameArray => {
-                              //    console.log("check : " + JSON.stringify(key.item.value.labels))
-                              //    console.log("labelNameArray3 : " + JSON.stringify(labelNameArray))
-                              //    if (labelNameArray != [] && labelNameArray != undefined) {
-                              //       labelNameArray.map(labelName => {
-                              //          console.log('map labelName : ' + labelName)
-                              //          return (
-                              //             <Text key={labelName}>{labelName}</Text>
-                              //          )
-                              //       })
-                              //    }
-                              // })
-                              // : null
-                        }
+                        <View style={{ width: '90%', flexWrap: 'wrap', flexDirection: 'row' }}>
+                           {
+                              key.item.value.labels != undefined ?
+                                 this.getLabelNames(key.item.value.labels).filter(labelKey => this.state.labels[labelKey] != undefined)
+                                    .map(labelKey => {
+                                       return (
+                                          <Chip mode='outlined' style={{ width: '30%' }} key={labelKey}>{this.state.labels[labelKey].labelName}</Chip>
+                                       )
+                                    })
+                                 : null
+                           }
+                        </View>
                      </Card>
                   )
                }
