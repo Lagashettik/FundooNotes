@@ -201,6 +201,8 @@ dependencies {
     implementation "com.google.firebase:firebase-core:19.0.0"
     implementation "com.google.firebase:firebase-messaging:22.0.0"
 
+    implementation project(':react-native-push-notification')
+
     //noinspection GradleDependency
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

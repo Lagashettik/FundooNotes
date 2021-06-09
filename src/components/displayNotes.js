@@ -117,25 +117,6 @@ export default class DisplayNotes extends Component {
       return labelKeyArray
    }
 
-
-
-   check = (labels) => {
-      let label = undefined
-      labels != undefined &&
-         this.getLabelNames(labels).filter(labelKey => labelKey != '').map(async labelKey => {
-            await this.getLabelNameFromDatabase(labelKey).then(labelName => {
-               console.log(labelName)
-               label = labelName
-               // return (
-               //    // <Text >{labelName}</Text>
-               //    <Chip >{labelName}</Chip>
-               // )
-            })
-         })
-      console.log("label : " + label)
-      return label != undefined && label
-   }
-
    render() {
       return (
 
